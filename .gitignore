@@ -1,0 +1,52 @@
+# Gitignore for an MLOps Project
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+*.egg-info/
+.pytest_cache/
+
+# Data
+data/raw/*
+data/processed/*
+data/reference/*
+# Keep empty directories for structure
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!data/reference/.gitkeep
+
+# MLflow
+mlruns/
+.mlflow/
+logs/
+
+# Notebooks
+.ipynb_checkpoints
+*.ipynb_checkpoints
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.bak
+*.swo
+
+# Environment variables
+.env
+.flaskenv
+
+# Docker
+*.dockerignore
+*.containerignore
+target/
+.mypy_cache/
+.ruff_cache/
+
+# Operating System files
+.DS_Store
+Thumbs.db
