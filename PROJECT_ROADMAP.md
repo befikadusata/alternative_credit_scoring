@@ -18,11 +18,11 @@ This document outlines a comprehensive, phased roadmap for the development and d
   - [x] Perform initial Exploratory Data Analysis (EDA) in a Jupyter Notebook to understand features, distributions, and data quality issues.
   - [x] Document initial findings and hypotheses in the notebook.
 
-- [ ] **Task 1.3: Setup Local Development Environment**
-  - [ ] Create a `docker-compose.yml` file to manage services like MLflow, PostgreSQL, and MinIO.
-  - [ ] Define project dependencies in `requirements.txt`.
-  - [ ] Create and document a `.env.template` file for environment variables.
-  - [ ] Write a `GETTING_STARTED.md` guide for new developers.
+- [x] **Task 1.3: Setup Local Development Environment**
+  - [x] Create a `docker-compose.yml` file to manage services like MLflow, PostgreSQL, and MinIO.
+  - [x] Define project dependencies in `requirements.txt`.
+  - [x] Create and document a `.env.template` file for environment variables.
+  - [x] Write a `GETTING_STARTED.md` guide for new developers.
 
 ---
 
