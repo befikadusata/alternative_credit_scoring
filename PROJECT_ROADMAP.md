@@ -53,20 +53,20 @@ This document outlines a comprehensive, phased roadmap for the development and d
 
 *This phase focuses on operationalizing the model by building a serving API and integrating MLOps tools.*
 
-- [ ] **Task 3.1: Develop Prediction API**
-  - [ ] Set up a FastAPI application in `src/api/` with endpoints for prediction and health checks.
-  - [ ] Create Pydantic schemas for request and response validation.
-  - [ ] Implement model loading logic that pulls the specified model version from the MLflow Registry.
+- [x] **Task 3.1: Develop Prediction API**
+  - [x] Set up a FastAPI application in `src/api/` with endpoints for prediction and health checks.
+  - [x] Create Pydantic schemas for request and response validation.
+  - [x] Implement model loading logic that pulls the specified model version from the MLflow Registry.
 
-- [ ] **Task 3.2: Implement Serving Strategies**
-  - [ ] Develop the Champion-Challenger routing logic to safely test new models.
-  - [ ] Implement structured logging for all predictions from both models to enable offline analysis.
-  - [ ] Implement a simple feature store using Redis for low-latency predictions.
+- [x] **Task 3.2: Implement Serving Strategies**
+  - [x] Develop the Champion-Challenger routing logic to safely test new models.
+  - [x] Implement structured logging for all predictions from both models to enable offline analysis.
+  - [x] Implement a simple feature store using Redis for low-latency predictions.
 
-- [ ] **Task 3.3: Integrate Model Monitoring**
-  - [ ] Develop a script (`src/monitoring/drift_detection.py`) to run data and prediction drift analysis using Evidently AI.
-  - [ ] Configure the API to export key metrics (latency, errors) to Prometheus.
-  - [ ] Create a basic Grafana dashboard to visualize infrastructure and model metrics.
+- [x] **Task 3.3: Integrate Model Monitoring**
+  - [x] Develop a script (`src/monitoring/drift_detection.py`) to run data and prediction drift analysis using Evidently AI.
+  - [x] Configure the API to export key metrics (latency, errors) to Prometheus.
+  - [x] Create a basic Grafana dashboard to visualize infrastructure and model metrics.
 
 ---
 
