@@ -8,49 +8,53 @@ The CI/CD pipeline is triggered automatically on specific events within the GitH
 
 1.  **Linting and Formatting Checks:** Ensures code adheres to established style guides and best practices.
 2.  **Unit and Integration Tests:** Validates the functionality of individual components and their interactions.
-3.  **Docker Image Build:** Creates and tags Docker images for the application services.
+3.  **Docker Image Build (Future):** Creates and tags Docker images for the application services.
 
 ## 2. GitHub Actions Workflow
 
-The pipeline is defined in a YAML file within the `.github/workflows/` directory of the repository.
+The pipeline is defined in the `.github/workflows/ci.yml` file in the repository.
 
 ### Triggers
 
 The workflow is configured to run on the following events:
 
-*   **Push to `main` branch:** Automatically triggers the full CI/CD pipeline, including tests and Docker image builds.
-*   **Pull Requests:** Runs linting and tests to ensure code quality before merging.
+*   **Push to `main` branch:** Automatically triggers the full CI pipeline.
+*   **Pull Requests to `main` branch:** Runs the full CI pipeline to ensure code quality before merging.
 
 ### Stages
 
-#### 2.1. Lint and Format
+The pipeline consists of two main jobs: `lint-and-format` and `test`.
 
-*   **Purpose:** Enforce code style and identify basic syntax errors.
+#### 2.1. Lint and Format (`lint-and-format`)
+
+*   **Purpose:** Enforce code style and identify basic syntax errors before running the test suite.
 *   **Steps:**
-    *   Checkout code.
-    *   Set up Python environment.
-    *   Install linting tools (e.g., `flake8`, `black`).
-    *   Run linters and formatters. Fails if any issues are found.
+    *   Checks out the repository code.
+    *   Sets up a Python 3.10 environment.
+    *   Installs [Poetry](https://python-poetry.org/) for dependency management.
+    *   Installs project dependencies using `poetry install`.
+    *   Runs `poetry run black --check .` to ensure code is formatted correctly.
+    *   Runs `poetry run isort --check .` to ensure imports are sorted correctly.
+    *   Runs `poetry run flake8 .` to check for linting errors.
+    *   The job will fail if any of these checks do not pass.
 
-#### 2.2. Test
+#### 2.2. Test (`test`)
 
-*   **Purpose:** Verify the correctness of the application logic.
+*   **Purpose:** Verify the correctness of the application logic by running the test suite. This job depends on the successful completion of the `lint-and-format` job.
 *   **Steps:**
-    *   Checkout code.
-    *   Set up Python environment.
-    *   Install project dependencies.
-    *   Run unit tests (e.g., using `pytest`).
-    *   Run integration tests (e.g., testing API endpoints against a mocked or temporary database).
-    *   (Optional but recommended) Run a simplified model training pipeline with a small dataset to catch potential regressions in the ML training logic.
+    *   Checks out the repository code.
+    *   Sets up a Python 3.10 environment and installs Poetry.
+    *   Installs project dependencies using `poetry install`.
+    *   Runs the test suite using `poetry run pytest`.
 
-#### 2.3. Build Docker Images
+#### 2.3. Build Docker Images (Future Implementation)
 
 *   **Purpose:** Create production-ready Docker images for deployment.
-*   **Steps:**
-    *   Checkout code.
+*   **Note:** This stage is not yet implemented in the current CI/CD workflow.
+*   **Future Steps:**
     *   Log in to a Docker registry (e.g., Docker Hub, AWS ECR).
-    *   Build Docker images for each service (e.g., `prediction-service`, `mlflow-server`).
-    *   Tag images appropriately (e.g., `latest`, Git commit SHA, version number).
+    *   Build Docker images for each service (e.g., `prediction-service`).
+    *   Tag images with the Git commit SHA and/or version number.
     *   Push tagged images to the Docker registry.
 
 ## 3. Future Enhancements
