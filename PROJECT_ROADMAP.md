@@ -30,22 +30,22 @@ This document outlines a comprehensive, phased roadmap for the development and d
 
 *This phase covers the data science lifecycle, from cleaning data and engineering features to training and evaluating the model.*
 
-- [ ] **Task 2.1: Data Preprocessing & Feature Engineering Pipeline**
-  - [ ] Develop reusable data cleaning and imputation logic in `src/data/`.
-  - [ ] Implement a feature engineering pipeline to create predictive features.
-  - [ ] Create a master script (`scripts/make_dataset.py`) to run the entire data processing pipeline.
-  - [ ] Implement a data versioning strategy and store a reference dataset for monitoring.
+- [x] **Task 2.1: Data Preprocessing & Feature Engineering Pipeline**
+  - [x] Develop reusable data cleaning and imputation logic in `src/data/`.
+  - [x] Implement a feature engineering pipeline to create predictive features.
+  - [x] Create a master script (`scripts/make_dataset.py`) to run the entire data processing pipeline.
+  - [x] Implement a data versioning strategy and store a reference dataset for monitoring.
 
-- [ ] **Task 2.2: Baseline Model Training**
-  - [ ] Develop a model training script (`src/models/train.py`).
-  - [ ] Integrate MLflow tracking to log all experiments, including parameters, metrics, and model artifacts.
-  - [ ] Train a baseline model (e.g., Logistic Regression or default XGBoost) to establish a performance benchmark.
+- [x] **Task 2.2: Baseline Model Training**
+  - [x] Develop a model training script (`src/models/train.py`).
+  - [x] Integrate MLflow tracking to log all experiments, including parameters, metrics, and model artifacts.
+  - [x] Train a baseline model (e.g., Logistic Regression or default XGBoost) to establish a performance benchmark.
 
-- [ ] **Task 2.3: Advanced Modeling & Evaluation**
-  - [ ] Implement a hyperparameter tuning process (e.g., using Optuna or `RandomizedSearchCV`).
-  - [ ] Develop a robust model evaluation framework (`src/models/evaluate.py`) that includes AUC, precision-recall, and a confusion matrix.
-  - [ ] Perform bias and fairness analysis on the best model candidate across different demographic groups.
-  - [ ] Register the final, validated model in the MLflow Model Registry.
+- [x] **Task 2.3: Advanced Modeling & Evaluation**
+  - [x] Implement a hyperparameter tuning process (e.g., using Optuna or `RandomizedSearchCV`).
+  - [x] Develop a robust model evaluation framework (`src/models/evaluate.py`) that includes AUC, precision-recall, and a confusion matrix.
+  - [x] Perform bias and fairness analysis on the best model candidate across different demographic groups.
+  - [x] Register the final, validated model in the MLflow Model Registry.
 
 ---
 
