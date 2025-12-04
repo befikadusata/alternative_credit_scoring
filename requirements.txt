@@ -23,11 +23,20 @@ uvicorn==0.25.0
 pydantic==2.5.3
 python-multipart==0.0.6
 
+# Feature Store
+redis==5.0.1
+
 # Data validation and quality
 evidently==0.4.21
 
+# Monitoring
+prometheus-fastapi-instrumentator==6.1.0
+
 # Feature importance and model interpretation
 shap==0.43.0
+
+# Structured Logging
+python-json-logger==2.0.7
 
 # Configuration management
 python-dotenv==1.0.0
