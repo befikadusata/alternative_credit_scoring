@@ -1,10 +1,10 @@
-import os
-import pandas as pd
 import logging
+import os
 from argparse import ArgumentParser
 
+import pandas as pd
+from evidently.metric_preset import ClassificationPreset, DataDriftPreset
 from evidently.report import Report
-from evidently.metric_preset import DataDriftPreset, ClassificationPreset
 from prometheus_client import CollectorRegistry, Gauge, push_to_gateway
 
 # Set up logging

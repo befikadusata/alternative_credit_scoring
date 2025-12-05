@@ -5,9 +5,10 @@ This module defines all the Pydantic models used for request and response valida
 in the credit scoring API.
 """
 
-from typing import List, Optional, Union
-from pydantic import BaseModel, Field
 from datetime import datetime
+from typing import List, Optional, Union
+
+from pydantic import BaseModel, Field
 
 
 # Prediction-related models

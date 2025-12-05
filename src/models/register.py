@@ -14,17 +14,13 @@ from pathlib import Path
 # Add the src directory to the path so we can import our modules
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
+import json
+
 import mlflow
 import mlflow.sklearn
 import pandas as pd
-from sklearn.metrics import (
-    roc_auc_score,
-    accuracy_score,
-    precision_score,
-    recall_score,
-    f1_score,
-)
-import json
+from sklearn.metrics import (accuracy_score, f1_score, precision_score,
+                             recall_score, roc_auc_score)
 
 
 def setup_logging():

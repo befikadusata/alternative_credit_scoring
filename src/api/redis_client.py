@@ -1,8 +1,9 @@
-import os
-import redis
-import logging
 import json
-from typing import Optional, Dict, Any
+import logging
+import os
+from typing import Any, Dict, Optional
+
+import redis
 
 from src.api.models import PredictionInput
 

@@ -4,11 +4,12 @@ Feature engineering module for the credit scoring platform.
 This module provides functions for creating predictive features from raw credit data.
 """
 
-import pandas as pd
-import numpy as np
-from sklearn.preprocessing import StandardScaler, LabelEncoder
-from typing import Dict, List, Tuple, Optional
 import logging
+from typing import Dict, List, Optional, Tuple
+
+import numpy as np
+import pandas as pd
+from sklearn.preprocessing import LabelEncoder, StandardScaler
 
 
 class FeatureEngineer:

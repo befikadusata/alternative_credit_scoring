@@ -12,7 +12,6 @@ import mlflow
 import mlflow.pyfunc
 from mlflow.tracking import MlflowClient
 
-
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

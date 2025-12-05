@@ -5,13 +5,14 @@ This module provides reusable functions for cleaning credit data,
 handling missing values, and performing data quality checks.
 """
 
-import pandas as pd
-import numpy as np
-from sklearn.impute import SimpleImputer, KNNImputer
-from sklearn.preprocessing import LabelEncoder, StandardScaler
 import logging
-from typing import Tuple, Dict, List, Optional, Union
 import re
+from typing import Dict, List, Optional, Tuple, Union
+
+import numpy as np
+import pandas as pd
+from sklearn.impute import KNNImputer, SimpleImputer
+from sklearn.preprocessing import LabelEncoder, StandardScaler
 
 
 class DataCleaner:

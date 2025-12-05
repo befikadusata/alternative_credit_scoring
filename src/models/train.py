@@ -19,24 +19,18 @@ import mlflow
 import mlflow.sklearn
 import numpy as np
 import pandas as pd
-from sklearn.linear_model import LogisticRegression
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import train_test_split, cross_val_score
-from sklearn.metrics import (
-    accuracy_score,
-    precision_score,
-    recall_score,
-    f1_score,
-    roc_auc_score,
-    classification_report,
-    confusion_matrix,
-)
-from sklearn.preprocessing import StandardScaler
 import xgboost as xgb
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import (accuracy_score, classification_report,
+                             confusion_matrix, f1_score, precision_score,
+                             recall_score, roc_auc_score)
+from sklearn.model_selection import cross_val_score, train_test_split
+from sklearn.preprocessing import StandardScaler
 
+from src.data.cleaning import load_and_clean_data
 # Import our custom modules
 from src.data.features import apply_feature_engineering
-from src.data.cleaning import load_and_clean_data
 
 
 def setup_logging():

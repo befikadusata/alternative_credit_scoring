@@ -5,9 +5,9 @@ This script runs the baseline model training with default parameters to establis
 a performance benchmark for the credit scoring model.
 """
 
+import os
 import subprocess
 import sys
-import os
 
 
 def run_baseline_training():

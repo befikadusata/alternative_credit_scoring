@@ -10,27 +10,22 @@ import argparse
 import logging
 import os
 import sys
-from pathlib import Path
 import warnings
+from pathlib import Path
 
 # Add the src directory to the path so we can import our modules
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
+import json
+
+import matplotlib.pyplot as plt
 import mlflow
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 import seaborn as sns
-from sklearn.metrics import (
-    accuracy_score,
-    precision_score,
-    recall_score,
-    f1_score,
-    roc_auc_score,
-    confusion_matrix,
-)
 from scipy.spatial.distance import jensenshannon
-import json
+from sklearn.metrics import (accuracy_score, confusion_matrix, f1_score,
+                             precision_score, recall_score, roc_auc_score)
 
 
 class FairnessAnalyzer:

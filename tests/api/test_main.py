@@ -1,16 +1,16 @@
-import pytest
-from fastapi.testclient import TestClient
-from unittest.mock import patch, MagicMock
-import pandas as pd
-import numpy as np
 import os
-import joblib
-from sklearn.linear_model import LogisticRegression
-from sklearn.datasets import make_classification
-
 # This is a bit of a hack to make sure the app can be imported
 # In a real project, you'd have a better packaging structure
 import sys
+from unittest.mock import MagicMock, patch
+
+import joblib
+import numpy as np
+import pandas as pd
+import pytest
+from fastapi.testclient import TestClient
+from sklearn.datasets import make_classification
+from sklearn.linear_model import LogisticRegression
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 

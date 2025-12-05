@@ -18,19 +18,16 @@ sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 import mlflow
 import mlflow.sklearn
 import numpy as np
-import pandas as pd
 import optuna
-from sklearn.linear_model import LogisticRegression
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import (
-    cross_val_score,
-    RandomizedSearchCV,
-    train_test_split,
-)
-from sklearn.metrics import make_scorer, roc_auc_score
-from sklearn.preprocessing import StandardScaler
+import pandas as pd
 import xgboost as xgb
 from scipy.stats import randint, uniform
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import make_scorer, roc_auc_score
+from sklearn.model_selection import (RandomizedSearchCV, cross_val_score,
+                                     train_test_split)
+from sklearn.preprocessing import StandardScaler
 
 
 class HyperparameterTuner:

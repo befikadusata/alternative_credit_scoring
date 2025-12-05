@@ -3,8 +3,9 @@
 Script to download the LendingClub dataset from Zenodo
 """
 import os
-import requests
 from pathlib import Path
+
+import requests
 
 
 def download_lendingclub_dataset():
