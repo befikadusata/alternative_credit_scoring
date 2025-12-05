@@ -24,8 +24,14 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 from scipy.spatial.distance import jensenshannon
-from sklearn.metrics import (accuracy_score, confusion_matrix, f1_score,
-                             precision_score, recall_score, roc_auc_score)
+from sklearn.metrics import (
+    accuracy_score,
+    confusion_matrix,
+    f1_score,
+    precision_score,
+    recall_score,
+    roc_auc_score,
+)
 
 
 class FairnessAnalyzer:

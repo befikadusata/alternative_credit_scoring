@@ -74,10 +74,18 @@ challenger_traffic_percentage = 0.0
 
 # Import the model loading functionality and Pydantic models
 from .model_loader import load_model_from_registry
-from .models import (APIRootResponse, BatchPredictionRequest,
-                     BatchPredictionResponse, HealthCheckResponse,
-                     ModelInfoResponse, ModelLoadRequest, ModelLoadResponse,
-                     PredictionInput, PredictionRequest, PredictionResponse)
+from .models import (
+    APIRootResponse,
+    BatchPredictionRequest,
+    BatchPredictionResponse,
+    HealthCheckResponse,
+    ModelInfoResponse,
+    ModelLoadRequest,
+    ModelLoadResponse,
+    PredictionInput,
+    PredictionRequest,
+    PredictionResponse,
+)
 
 
 def _load_model(model_name: str, model_version: str, model_type: str):

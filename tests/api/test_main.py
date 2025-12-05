@@ -1,4 +1,5 @@
 import os
+
 # This is a bit of a hack to make sure the app can be imported
 # In a real project, you'd have a better packaging structure
 import sys

@@ -23,10 +23,18 @@ import pandas as pd
 import seaborn as sns
 import shap
 from sklearn.calibration import calibration_curve
-from sklearn.metrics import (accuracy_score, average_precision_score,
-                             classification_report, confusion_matrix, f1_score,
-                             precision_recall_curve, precision_score,
-                             recall_score, roc_auc_score, roc_curve)
+from sklearn.metrics import (
+    accuracy_score,
+    average_precision_score,
+    classification_report,
+    confusion_matrix,
+    f1_score,
+    precision_recall_curve,
+    precision_score,
+    recall_score,
+    roc_auc_score,
+    roc_curve,
+)
 
 
 class ModelEvaluator:

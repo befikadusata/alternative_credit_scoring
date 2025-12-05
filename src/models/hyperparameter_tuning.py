@@ -25,8 +25,11 @@ from scipy.stats import randint, uniform
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import make_scorer, roc_auc_score
-from sklearn.model_selection import (RandomizedSearchCV, cross_val_score,
-                                     train_test_split)
+from sklearn.model_selection import (
+    RandomizedSearchCV,
+    cross_val_score,
+    train_test_split,
+)
 from sklearn.preprocessing import StandardScaler
 
 
