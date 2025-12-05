@@ -41,7 +41,9 @@ class DataVersioner:
             self.experiment_id = mlflow.create_experiment(self.experiment_name)
         except Exception as e:
             # If experiment already exists, get its ID
-            self.logger.debug(f"Experiment creation failed (likely already exists): {str(e)}")
+            self.logger.debug(
+                f"Experiment creation failed (likely already exists): {str(e)}"
+            )
             experiment = mlflow.get_experiment_by_name(self.experiment_name)
             self.experiment_id = experiment.experiment_id
 

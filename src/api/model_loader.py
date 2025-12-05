@@ -85,7 +85,9 @@ def load_model_from_registry(
                 )
             except Exception as e:
                 # Assume it's a version number
-                logger.debug(f"Version/alias lookup failed with: {str(e)}, treating as version number")
+                logger.debug(
+                    f"Version/alias lookup failed with: {str(e)}, treating as version number"
+                )
                 model_uri = f"models:/{model_name}/{model_version}"
                 logger.info(f"Using direct version '{model_version}', URI: {model_uri}")
 

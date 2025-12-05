@@ -7,7 +7,6 @@ This module sets up the FastAPI application with endpoints for:
 - Model information
 """
 
-import jsonlogger
 import logging
 import os
 import random
@@ -15,6 +14,7 @@ import time
 from datetime import datetime
 from threading import Lock
 
+import jsonlogger
 import pandas as pd
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware

@@ -109,7 +109,9 @@ class FairnessAnalyzer:
                             y_true_group, y_pred_group
                         )
                     except Exception as e:
-                        logger.debug(f"AUC calculation failed for group {value}: {str(e)}")
+                        logger.debug(
+                            f"AUC calculation failed for group {value}: {str(e)}"
+                        )
                         group_metrics[value]["auc"] = -1  # Placeholder
                 else:
                     group_metrics[value][

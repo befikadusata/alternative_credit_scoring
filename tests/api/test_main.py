@@ -12,7 +12,9 @@ from sklearn.linear_model import LogisticRegression
 
 # This is a bit of a hack to make sure the app can be imported
 # In a real project, you'd have a better packaging structure
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))  # noqa: E402
+sys.path.insert(
+    0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+)  # noqa: E402
 
 from src.api.main import app
 from src.api.models import PredictionInput
