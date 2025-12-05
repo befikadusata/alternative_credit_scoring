@@ -7,11 +7,10 @@ handling missing values, and performing data quality checks.
 
 import logging
 import re
-from typing import Dict, List, Optional, Tuple, Union
 
 import numpy as np
 import pandas as pd
-from sklearn.impute import KNNImputer, SimpleImputer
+from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 
 

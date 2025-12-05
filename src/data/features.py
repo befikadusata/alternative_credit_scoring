@@ -5,11 +5,8 @@ This module provides functions for creating predictive features from raw credit 
 """
 
 import logging
-from typing import Dict, List, Optional, Tuple
 
-import numpy as np
 import pandas as pd
-from sklearn.preprocessing import LabelEncoder, StandardScaler
 
 
 class FeatureEngineer:
@@ -178,7 +175,7 @@ class FeatureEngineer:
 
         # If loan term is available
         if "term" in df.columns:
-            df["term_numeric"] = df["term"].str.extract("(\d+)").astype(int)
+            df["term_numeric"] = df["term"].str.extract(r"(\d+)").astype(int)
 
         return df
 

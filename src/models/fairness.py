@@ -7,31 +7,25 @@ and demographic parity metrics.
 """
 
 import argparse
+import json
 import logging
 import os
 import sys
-import warnings
-from pathlib import Path
-
-# Add the src directory to the path so we can import our modules
-sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
-
-import json
 
 import matplotlib.pyplot as plt
 import mlflow
 import numpy as np
 import pandas as pd
-import seaborn as sns
-from scipy.spatial.distance import jensenshannon
 from sklearn.metrics import (
     accuracy_score,
-    confusion_matrix,
     f1_score,
     precision_score,
     recall_score,
     roc_auc_score,
 )
+
+# Add the src directory to the path so we can import our modules
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
 
 class FairnessAnalyzer:
@@ -114,7 +108,8 @@ class FairnessAnalyzer:
                         group_metrics[value]["auc"] = roc_auc_score(
                             y_true_group, y_pred_group
                         )
-                    except:
+                    except Exception as e:
+                        logger.debug(f"AUC calculation failed for group {value}: {str(e)}")
                         group_metrics[value]["auc"] = -1  # Placeholder
                 else:
                     group_metrics[value][
@@ -332,8 +327,9 @@ class FairnessAnalyzer:
             if save_plots:
                 try:
                     mlflow.log_figure(fig, f"{model_name}_fairness_{feature}.png")
-                except:
+                except Exception as e:
                     # If not in MLflow run, save locally
+                    logger.debug(f"Fairness figure logging failed: {str(e)}")
                     fig.savefig(f"{model_name}_fairness_{feature}.png")
 
             plt.close(fig)
@@ -402,8 +398,9 @@ def analyze_model_fairness(
                     [v for v in bias_info["disparities"].values()], default=0
                 )
                 mlflow.log_metric(f"{feature}_max_disparity", max_disparity)
-    except:
+    except Exception as e:
         # If not in MLflow run, continue without logging
+        logger.debug(f"Fairness metrics MLflow logging failed: {str(e)}")
         pass
 
     logger.info(f"Fairness analysis completed for {model_name}")
@@ -467,8 +464,9 @@ def main(
     experiment_name = "Fairness_Analysis"
     try:
         experiment_id = mlflow.create_experiment(experiment_name)
-    except:
+    except Exception as e:
         # If experiment already exists, get its ID
+        logger.debug(f"Experiment creation failed (likely already exists): {str(e)}")
         experiment = mlflow.get_experiment_by_name(experiment_name)
         experiment_id = experiment.experiment_id
 
@@ -516,8 +514,9 @@ def main(
 
         try:
             mlflow.log_artifact("fairness_report.json")
-        except:
+        except Exception as e:
             # If not in MLflow run, save locally
+            logger.debug(f"MLflow artifact logging failed: {str(e)}")
             pass
 
         # Clean up temporary file

@@ -9,20 +9,12 @@ import argparse
 import logging
 import os
 import sys
-from pathlib import Path
-
-# Add the src directory to the path so we can import our modules
-sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
-
-import json
 
 import matplotlib.pyplot as plt
 import mlflow
-import numpy as np
 import pandas as pd
 import seaborn as sns
 import shap
-from sklearn.calibration import calibration_curve
 from sklearn.metrics import (
     accuracy_score,
     average_precision_score,
@@ -35,6 +27,9 @@ from sklearn.metrics import (
     roc_auc_score,
     roc_curve,
 )
+
+# Add the src directory to the path so we can import our modules
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
 
 class ModelEvaluator:
@@ -127,8 +122,9 @@ class ModelEvaluator:
                 mlflow.log_metric("fp", cm[0, 1])
                 mlflow.log_metric("fn", cm[1, 0])
                 mlflow.log_metric("tp", cm[1, 1])
-        except:
+        except Exception as e:
             # If not in MLflow run, continue without logging
+            self.logger.debug(f"MLflow logging failed, continuing: {str(e)}")
             pass
 
         # Generate visualizations if requested
@@ -204,8 +200,9 @@ class ModelEvaluator:
         # Log the figure to MLflow
         try:
             mlflow.log_figure(fig, f"{model_name}_evaluation_plots.png")
-        except:
+        except Exception as e:
             # If not in MLflow run, save locally
+            self.logger.debug(f"MLflow figure logging failed, saving locally: {str(e)}")
             fig.savefig(f"{model_name}_evaluation_plots.png")
 
         plt.close(fig)
@@ -247,8 +244,9 @@ class ModelEvaluator:
             # Log to MLflow
             try:
                 mlflow.log_figure(fig, f"{model_name}_shap_summary.png")
-            except:
+            except Exception as e:
                 # If not in MLflow run, save locally
+                self.logger.debug(f"MLflow SHAP figure logging failed: {str(e)}")
                 fig.savefig(f"{model_name}_shap_summary.png")
 
             plt.close(fig)
@@ -348,8 +346,9 @@ class ModelEvaluator:
                             mlflow.log_metric(
                                 f"{feature}_{group}_{metric_name}", metric_value
                             )
-        except:
+        except Exception as e:
             # If not in MLflow run, continue without logging
+            self.logger.debug(f"Fairness metrics MLflow logging failed: {str(e)}")
             pass
 
         return results_by_group
@@ -440,8 +439,9 @@ def main(
     experiment_name = "Model_Evaluation"
     try:
         experiment_id = mlflow.create_experiment(experiment_name)
-    except:
+    except Exception as e:
         # If experiment already exists, get its ID
+        logger.debug(f"Experiment creation failed (likely already exists): {str(e)}")
         experiment = mlflow.get_experiment_by_name(experiment_name)
         experiment_id = experiment.experiment_id
 

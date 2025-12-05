@@ -6,26 +6,17 @@ after successful evaluation and fairness analysis.
 """
 
 import argparse
+import json
 import logging
 import os
 import sys
-from pathlib import Path
-
-# Add the src directory to the path so we can import our modules
-sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
-
-import json
 
 import mlflow
 import mlflow.sklearn
 import pandas as pd
-from sklearn.metrics import (
-    accuracy_score,
-    f1_score,
-    precision_score,
-    recall_score,
-    roc_auc_score,
-)
+
+# Add the src directory to the path so we can import our modules
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
 
 def setup_logging():
@@ -233,8 +224,9 @@ def register_model(
             mlflow.log_param("registered_model_name", model_name)
             mlflow.log_param("registered_model_version", result.version)
             mlflow.log_param("registration_stage", stage)
-        except:
+        except Exception as e:
             # If not in MLflow run, continue without logging
+            logger.debug(f"MLflow registration logging failed: {str(e)}")
             pass
 
         return result.version
@@ -278,8 +270,9 @@ def main(
     experiment_name = "Model_Registration"
     try:
         experiment_id = mlflow.create_experiment(experiment_name)
-    except:
+    except Exception as e:
         # If experiment already exists, get its ID
+        logger.debug(f"Experiment creation failed (likely already exists): {str(e)}")
         experiment = mlflow.get_experiment_by_name(experiment_name)
         experiment_id = experiment.experiment_id
 

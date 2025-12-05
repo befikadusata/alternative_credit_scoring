@@ -83,8 +83,9 @@ def load_model_from_registry(
                 logger.info(
                     f"Resolved alias '{model_version}' to version {alias_version_info.version}, URI: {model_uri}"
                 )
-            except:
+            except Exception as e:
                 # Assume it's a version number
+                logger.debug(f"Version/alias lookup failed with: {str(e)}, treating as version number")
                 model_uri = f"models:/{model_name}/{model_version}"
                 logger.info(f"Using direct version '{model_version}', URI: {model_uri}")
 
@@ -131,8 +132,9 @@ def get_model_version_info(
                     model_name, model_version
                 )
                 model_version = version_info.version
-            except:
+            except Exception as e:
                 # Not an alias, assume it's a version number
+                logger.debug(f"Not an alias, treating as version number: {str(e)}")
                 pass
 
         if model_version == "latest":
@@ -201,7 +203,7 @@ def validate_model_features(model: mlflow.pyfunc.PyFuncModel, input_data) -> boo
     """
     try:
         # Try to make a prediction with the model to validate it works with the input
-        prediction = model.predict(input_data)
+        model.predict(input_data)
         return True
     except Exception as e:
         logger.error(f"Model validation failed: {str(e)}")

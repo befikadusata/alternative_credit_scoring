@@ -9,28 +9,19 @@ import argparse
 import logging
 import os
 import sys
-import warnings
-from pathlib import Path
-
-# Add the src directory to the path so we can import our modules
-sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
 import mlflow
 import mlflow.sklearn
-import numpy as np
 import optuna
 import pandas as pd
 import xgboost as xgb
 from scipy.stats import randint, uniform
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import make_scorer, roc_auc_score
-from sklearn.model_selection import (
-    RandomizedSearchCV,
-    cross_val_score,
-    train_test_split,
-)
-from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import RandomizedSearchCV, cross_val_score
+
+# Add the src directory to the path so we can import our modules
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
 
 class HyperparameterTuner:
@@ -176,7 +167,8 @@ class HyperparameterTuner:
             try:
                 trial_number = trial.number
                 mlflow.log_metric(f"trial_{trial_number}_score", scores.mean())
-            except:
+            except Exception as e:
+                self.logger.debug(f"MLflow trial logging failed, continuing: {str(e)}")
                 pass  # If not in MLflow run, continue without logging
 
             return scores.mean()
@@ -364,8 +356,9 @@ def main(
     experiment_name = f"Hyperparameter_Tuning_{model_type}"
     try:
         experiment_id = mlflow.create_experiment(experiment_name)
-    except:
+    except Exception as e:
         # If experiment already exists, get its ID
+        logger.debug(f"Experiment creation failed (likely already exists): {str(e)}")
         experiment = mlflow.get_experiment_by_name(experiment_name)
         experiment_id = experiment.experiment_id
 

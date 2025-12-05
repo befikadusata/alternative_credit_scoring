@@ -2,7 +2,6 @@
 """
 Script to download the LendingClub dataset from Zenodo
 """
-import os
 from pathlib import Path
 
 import requests
@@ -46,12 +45,12 @@ def download_lendingclub_dataset():
                 if total_size > 0:
                     percent = (downloaded_size / total_size) * 100
                     print(
-                        f"\rDownloaded: {downloaded_size / (1024*1024):.1f} MB / {total_size / (1024*1024):.1f} MB ({percent:.1f}%)",
+                        f"\rDownloaded: {downloaded_size / (1024 * 1024):.1f} MB / {total_size / (1024 * 1024):.1f} MB ({percent:.1f}%)",
                         end="",
                     )
 
     print(f"\nDownload completed successfully! File saved to {file_path}")
-    print(f"File size: {file_path.stat().st_size / (1024*1024):.1f} MB")
+    print(f"File size: {file_path.stat().st_size / (1024 * 1024):.1f} MB")
 
 
 if __name__ == "__main__":

@@ -16,14 +16,14 @@ import os
 import sys
 from pathlib import Path
 
-# Add the src directory to the path so we can import our modules
-sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
-
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
+# Add the src directory to the path so we can import our modules
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))  # noqa: E402
+
 # Import our custom modules
-from src.data.cleaning import DataCleaner, load_and_clean_data
+from src.data.cleaning import DataCleaner
 from src.data.features import FeatureEngineer, apply_feature_engineering
 
 

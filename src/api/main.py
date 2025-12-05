@@ -7,27 +7,29 @@ This module sets up the FastAPI application with endpoints for:
 - Model information
 """
 
+import jsonlogger
 import logging
 import os
 import random
-import sys
 import time
 from datetime import datetime
 from threading import Lock
-from typing import Any, Dict, List, Optional
 
+import pandas as pd
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
 from prometheus_fastapi_instrumentator import Instrumentator
 
-# Add the src directory to the path so we can import our modules
-sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
-
-import mlflow
-import mlflow.pyfunc
-import pandas as pd
-
+from .model_loader import load_model_from_registry
+from .models import (
+    APIRootResponse,
+    BatchPredictionRequest,
+    BatchPredictionResponse,
+    ModelLoadRequest,
+    ModelLoadResponse,
+    PredictionRequest,
+    PredictionResponse,
+)
 from .redis_client import redis_client  # Import the Redis client
 
 # Set up logging
@@ -70,22 +72,6 @@ challenger_model = None
 champion_model_info = {}
 challenger_model_info = {}
 challenger_traffic_percentage = 0.0
-
-
-# Import the model loading functionality and Pydantic models
-from .model_loader import load_model_from_registry
-from .models import (
-    APIRootResponse,
-    BatchPredictionRequest,
-    BatchPredictionResponse,
-    HealthCheckResponse,
-    ModelInfoResponse,
-    ModelLoadRequest,
-    ModelLoadResponse,
-    PredictionInput,
-    PredictionRequest,
-    PredictionResponse,
-)
 
 
 def _load_model(model_name: str, model_version: str, model_type: str):

@@ -39,8 +39,9 @@ class DataVersioner:
         # Create or get the experiment
         try:
             self.experiment_id = mlflow.create_experiment(self.experiment_name)
-        except:
+        except Exception as e:
             # If experiment already exists, get its ID
+            self.logger.debug(f"Experiment creation failed (likely already exists): {str(e)}")
             experiment = mlflow.get_experiment_by_name(self.experiment_name)
             self.experiment_id = experiment.experiment_id
 
@@ -158,9 +159,6 @@ class DataVersioner:
         Returns:
             Loaded DataFrame
         """
-        # Get the artifact URI
-        artifact_uri = mlflow.get_artifact_uri(f"{artifact_path}/{dataset_name}")
-
         # Download the artifact
         local_path = mlflow.artifacts.download_artifacts(
             run_id=run_id, artifact_path=f"{artifact_path}/"

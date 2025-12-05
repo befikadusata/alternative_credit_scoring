@@ -9,15 +9,9 @@ import argparse
 import logging
 import os
 import sys
-import warnings
-from pathlib import Path
-
-# Add the src directory to the path so we can import our modules
-sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
 import mlflow
 import mlflow.sklearn
-import numpy as np
 import pandas as pd
 import xgboost as xgb
 from sklearn.ensemble import RandomForestClassifier
@@ -32,12 +26,9 @@ from sklearn.metrics import (
     roc_auc_score,
 )
 from sklearn.model_selection import cross_val_score, train_test_split
-from sklearn.preprocessing import StandardScaler
 
-from src.data.cleaning import load_and_clean_data
-
-# Import our custom modules
-from src.data.features import apply_feature_engineering
+# Add the src directory to the path so we can import our modules
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
 
 def setup_logging():
@@ -340,8 +331,9 @@ def main(
     experiment_name = "Credit_Scoring_Baseline_Models"
     try:
         experiment_id = mlflow.create_experiment(experiment_name)
-    except:
+    except Exception as e:
         # If experiment already exists, get its ID
+        logger.debug(f"Experiment creation failed (likely already exists): {str(e)}")
         experiment = mlflow.get_experiment_by_name(experiment_name)
         experiment_id = experiment.experiment_id
 
