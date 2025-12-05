@@ -8,6 +8,7 @@ from src.api.models import PredictionInput
 
 logger = logging.getLogger(__name__)
 
+
 class RedisClient:
     _instance = None
     _lock = Lock()
@@ -25,7 +26,9 @@ class RedisClient:
         self.REDIS_PORT = int(os.getenv("REDIS_PORT", 6379))
         self.REDIS_DB = int(os.getenv("REDIS_DB", 0))
         self.REDIS_PASSWORD = os.getenv("REDIS_PASSWORD", None)
-        self.REDIS_TTL_SECONDS = int(os.getenv("REDIS_TTL_SECONDS", 3600)) # Default to 1 hour
+        self.REDIS_TTL_SECONDS = int(
+            os.getenv("REDIS_TTL_SECONDS", 3600)
+        )  # Default to 1 hour
 
         self.client: Optional[redis.Redis] = None
         self._connect()
@@ -37,7 +40,7 @@ class RedisClient:
                 port=self.REDIS_PORT,
                 db=self.REDIS_DB,
                 password=self.REDIS_PASSWORD,
-                socket_connect_timeout=1
+                socket_connect_timeout=1,
             )
             self.client.ping()
             logger.info("Successfully connected to Redis.")
@@ -55,7 +58,7 @@ class RedisClient:
         if not self.client:
             logger.warning("Redis client not connected. Cannot get features.")
             return None
-        
+
         try:
             key = self._get_redis_key(loan_id)
             cached_data = self.client.get(key)
@@ -67,7 +70,9 @@ class RedisClient:
             logger.info(f"Features for loan_id '{loan_id}' not found in Redis cache.")
             return None
         except Exception as e:
-            logger.error(f"Error retrieving features for loan_id '{loan_id}' from Redis: {e}")
+            logger.error(
+                f"Error retrieving features for loan_id '{loan_id}' from Redis: {e}"
+            )
             return None
 
     def set_features(self, loan_id: str, features: PredictionInput) -> bool:
@@ -79,11 +84,16 @@ class RedisClient:
             key = self._get_redis_key(loan_id)
             # Store the Pydantic model as a JSON string
             self.client.setex(key, self.REDIS_TTL_SECONDS, features.json())
-            logger.info(f"Features for loan_id '{loan_id}' stored in Redis cache with TTL {self.REDIS_TTL_SECONDS}s.")
+            logger.info(
+                f"Features for loan_id '{loan_id}' stored in Redis cache with TTL {self.REDIS_TTL_SECONDS}s."
+            )
             return True
         except Exception as e:
-            logger.error(f"Error storing features for loan_id '{loan_id}' to Redis: {e}")
+            logger.error(
+                f"Error storing features for loan_id '{loan_id}' to Redis: {e}"
+            )
             return False
+
 
 # Ensure the client is initialized on import
 redis_client = RedisClient()
