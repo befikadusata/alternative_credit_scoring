@@ -61,6 +61,7 @@ extend-ignore = [
     "E501",  # Line too long - handled by Black
     "W503",  # Line break occurred before a binary operator - conflicts with Black
     "E402",  # Module level import not at top of file - needed for scripts with local imports
+    "F841",  # Local variable is assigned to but never used - conflicts with Ruff
 ]
 
 [tool.ruff]
