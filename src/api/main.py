@@ -9,6 +9,7 @@ This module sets up the FastAPI application with endpoints for:
 
 # Initialize FastAPI app - Moved to top
 from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 
 
@@ -74,10 +75,10 @@ from datetime import datetime, timezone
 from threading import Lock
 
 import pandas as pd
-from pythonjsonlogger import jsonlogger
 from fastapi import HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from prometheus_fastapi_instrumentator import Instrumentator
+from pythonjsonlogger import jsonlogger
 
 from .model_loader import load_model_from_registry
 from .models import (

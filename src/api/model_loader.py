@@ -6,7 +6,7 @@ This module handles loading models from the MLflow Model Registry.
 
 import logging
 import os
-from typing import Optional, Union, List
+from typing import List, Optional, Union
 
 import joblib
 import numpy as np

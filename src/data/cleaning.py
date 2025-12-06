@@ -7,7 +7,7 @@ handling missing values, and performing data quality checks.
 
 import logging
 import re
-from typing import Optional, List
+from typing import List, Optional
 
 import numpy as np
 import pandas as pd

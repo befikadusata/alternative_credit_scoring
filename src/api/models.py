@@ -8,7 +8,7 @@ in the credit scoring API.
 from datetime import datetime
 from typing import List, Optional, Union
 
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 
 # Prediction-related models
