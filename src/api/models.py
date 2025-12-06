@@ -8,7 +8,7 @@ in the credit scoring API.
 from datetime import datetime
 from typing import List, Optional, Union
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 
 
 # Prediction-related models
@@ -29,7 +29,7 @@ class PredictionInput(BaseModel):
         gt=0,
     )
     term: str = Field(
-        ..., description="The number of payments on the loan", regex=r"^(36|60) months$"
+        ..., description="The number of payments on the loan", pattern=r"^(36|60) months$"
     )
     int_rate: float = Field(..., description="Interest Rate on the loan", gt=0, le=100)
     installment: float = Field(
@@ -39,9 +39,9 @@ class PredictionInput(BaseModel):
     )
 
     # Credit grade
-    grade: str = Field(..., description="LC assigned loan grade", regex=r"^[A-G]$")
+    grade: str = Field(..., description="LC assigned loan grade", pattern=r"^[A-G]$")
     sub_grade: str = Field(
-        ..., description="LC assigned loan subgrade", regex=r"^[A-G][1-5]$"
+        ..., description="LC assigned loan subgrade", pattern=r"^[A-G][1-5]$"
     )
 
     # Employment information
@@ -51,7 +51,7 @@ class PredictionInput(BaseModel):
     home_ownership: str = Field(
         ...,
         description="The home ownership status provided by the borrower",
-        regex=r"^(OWN|RENT|MORTGAGE|OTHER|NONE|ANY)$",
+        pattern=r"^(OWN|RENT|MORTGAGE|OTHER|NONE|ANY)$",
     )
 
     # Financial information
@@ -63,7 +63,7 @@ class PredictionInput(BaseModel):
     verification_status: str = Field(
         ...,
         description="Indicates if income was verified",
-        regex=r"^(Verified|Source Verified|Not Verified)$",
+        pattern=r"^(Verified|Source Verified|Not Verified)$",
     )
 
     # Loan purpose
@@ -110,7 +110,7 @@ class PredictionInput(BaseModel):
 
     # Payment status
     initial_list_status: str = Field(
-        ..., description="The initial listing status of the loan", regex=r"^[fw]$"
+        ..., description="The initial listing status of the loan", pattern=r"^[fw]$"
     )
     total_pymnt: float = Field(
         ..., description="Payments received to date for the loan", ge=0
@@ -129,8 +129,8 @@ class PredictionInput(BaseModel):
     )
     last_pymnt_amnt: float = Field(..., description="Last month's payment amount", ge=0)
 
-    class Config:
-        schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "loan_amnt": 10000.0,
                 "term": "36 months",
@@ -162,6 +162,7 @@ class PredictionInput(BaseModel):
                 "last_pymnt_amnt": 335.23,
             }
         }
+    )
 
 
 class PredictionRequest(BaseModel):
@@ -179,8 +180,8 @@ class BatchPredictionRequest(BaseModel):
 
     inputs: List[PredictionInput] = Field(
         ...,
-        min_items=1,
-        max_items=1000,
+        min_length=1,
+        max_length=1000,
         description="List of input features for batch prediction",
     )
 
@@ -197,7 +198,7 @@ class ModelLoadRequest(BaseModel):
     model_type: str = Field(
         "champion",
         description="Type of model to load ('champion' or 'challenger')",
-        regex=r"^(champion|challenger)$",
+        pattern=r"^(champion|challenger)$",
     )
 
 
@@ -216,7 +217,7 @@ class PredictionResponse(BaseModel):
         ..., description="Probability of repayment (class 0)", ge=0, le=1
     )
     risk_level: str = Field(
-        ..., description="Risk level classification", regex=r"^(low|medium|high)$"
+        ..., description="Risk level classification", pattern=r"^(low|medium|high)$"
     )
     prediction_time_seconds: float = Field(
         ..., description="Time taken to make the prediction", ge=0
@@ -253,7 +254,7 @@ class HealthCheckResponse(BaseModel):
     """
 
     status: str = Field(
-        ..., description="Overall health status", regex=r"^(healthy|unhealthy)$"
+        ..., description="Overall health status", pattern=r"^(healthy|unhealthy)$"
     )
     timestamp: datetime = Field(..., description="Timestamp of the health check")
     model_loaded: bool = Field(..., description="Whether a model is currently loaded")

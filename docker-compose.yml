@@ -9,8 +9,6 @@ services:
       POSTGRES_DB: mlflow
       POSTGRES_USER: mlflow
       POSTGRES_PASSWORD: mlflow
-    ports:
-      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -55,6 +53,11 @@ services:
       - AWS_ACCESS_KEY_ID=minioadmin
       - AWS_SECRET_ACCESS_KEY=minioadmin123
       - AWS_DEFAULT_REGION=us-east-1
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
     volumes:
       - ./src:/app/src
       - ./notebooks:/app/notebooks

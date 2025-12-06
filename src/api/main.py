@@ -7,105 +7,13 @@ This module sets up the FastAPI application with endpoints for:
 - Model information
 """
 
-import logging
-import os
-import random
-import time
-from datetime import datetime
-from threading import Lock
+# Initialize FastAPI app - Moved to top
+from contextlib import asynccontextmanager
+from fastapi import FastAPI
 
-import jsonlogger
-import pandas as pd
-from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-from prometheus_fastapi_instrumentator import Instrumentator
-
-from .model_loader import load_model_from_registry
-from .models import (
-    APIRootResponse,
-    BatchPredictionRequest,
-    BatchPredictionResponse,
-    ModelLoadRequest,
-    ModelLoadResponse,
-    PredictionRequest,
-    PredictionResponse,
-)
-from .redis_client import redis_client  # Import the Redis client
-
-# Set up logging
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
-
-# Set up structured logging for predictions
-log_handler = logging.StreamHandler()
-formatter = jsonlogger.JsonFormatter(
-    fmt="%(asctime)s %(levelname)s %(name)s %(message)s"
-)
-log_handler.setFormatter(formatter)
-prediction_logger = logging.getLogger("prediction_logger")
-prediction_logger.addHandler(log_handler)
-prediction_logger.setLevel(logging.INFO)
-
-
-# Initialize FastAPI app
-app = FastAPI(
-    title="Credit Scoring API",
-    description="API for making credit scoring predictions with Champion-Challenger support",
-    version="1.1.0",
-    docs_url="/docs",
-    redoc_url="/redoc",
-)
-
-# Add CORS middleware
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # In production, replace with specific origins
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-# --- Champion-Challenger Model Management ---
-model_lock = Lock()
-champion_model = None
-challenger_model = None
-champion_model_info = {}
-challenger_model_info = {}
-challenger_traffic_percentage = 0.0
-
-
-def _load_model(model_name: str, model_version: str, model_type: str):
-    """Helper to load a model and update its info."""
-    global champion_model, challenger_model, champion_model_info, challenger_model_info
-
-    model = load_model_from_registry(model_name, model_version)
-    model_info = {
-        "model_name": model_name,
-        "model_version": model_version,
-        "load_time": datetime.utcnow(),
-        "last_prediction_time": None,
-    }
-
-    if model_type == "champion":
-        champion_model = model
-        champion_model_info = model_info
-    elif model_type == "challenger":
-        challenger_model = model
-        challenger_model_info = model_info
-
-    logger.info(
-        f"Successfully loaded {model_type} model: {model_name} version {model_version}"
-    )
-
-
-@app.on_event("startup")
-async def startup_event():
-    """
-    Startup event to load champion and challenger models.
-    """
-    # Instrument the app with Prometheus
-    Instrumentator().instrument(app).expose(app)
-
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Lifespan context manager to handle startup and shutdown events."""
     logger.info("Starting up Credit Scoring API with Champion-Challenger support...")
     global challenger_traffic_percentage
 
@@ -139,7 +47,113 @@ async def startup_event():
                 logger.error(f"Failed to load challenger model on startup: {str(e)}")
 
     # Initialize Redis client on startup
-    redis_client.ping()
+    if redis_client.client:
+        redis_client.client.ping()
+
+    yield  # This is where the application runs
+
+    # Shutdown code would go here if needed
+    logger.info("Shutting down Credit Scoring API...")
+
+app = FastAPI(
+    title="Credit Scoring API",
+    description="API for making credit scoring predictions with Champion-Challenger support",
+    version="1.1.0",
+    docs_url="/docs",
+    redoc_url="/redoc",
+    lifespan=lifespan
+)
+
+import logging
+import os
+import random
+import time
+from datetime import datetime, timezone
+from threading import Lock
+
+import pandas as pd
+from pythonjsonlogger import jsonlogger
+from fastapi import HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from prometheus_fastapi_instrumentator import Instrumentator
+
+from .model_loader import load_model_from_registry
+from .models import (
+    APIRootResponse,
+    BatchPredictionRequest,
+    BatchPredictionResponse,
+    ModelLoadRequest,
+    ModelLoadResponse,
+    PredictionRequest,
+    PredictionResponse,
+)
+from .redis_client import redis_client  # Import the Redis client
+
+# Set up logging
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
+# Set up structured logging for predictions
+log_handler = logging.StreamHandler()
+formatter = jsonlogger.JsonFormatter(
+    fmt="%(asctime)s %(levelname)s %(name)s %(message)s"
+)
+log_handler.setFormatter(formatter)
+prediction_logger = logging.getLogger("prediction_logger")
+prediction_logger.addHandler(log_handler)
+prediction_logger.setLevel(logging.INFO)
+
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # In production, replace with specific origins
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Instrument the app with Prometheus
+Instrumentator().instrument(app).expose(app)
+
+# --- Champion-Challenger Model Management ---
+model_lock = Lock()
+champion_model = None
+challenger_model = None
+champion_cleaner = None
+challenger_cleaner = None
+champion_model_info = {}
+challenger_model_info = {}
+challenger_traffic_percentage = 0.0
+
+
+def _load_model(model_name: str, model_version: str, model_type: str):
+    """Helper to load a model and its data cleaner, and update its info."""
+    global champion_model, challenger_model, champion_cleaner, challenger_cleaner, champion_model_info, challenger_model_info
+
+    model, cleaner, feature_names = load_model_from_registry(model_name, model_version)
+    model_info = {
+        "model_name": model_name,
+        "model_version": model_version,
+        "load_time": datetime.now(timezone.utc),
+        "last_prediction_time": None,
+        "feature_names": feature_names, # Store feature names
+    }
+
+    if model_type == "champion":
+        champion_model = model
+        champion_cleaner = cleaner
+        champion_model_info = model_info
+    elif model_type == "challenger":
+        challenger_model = model
+        challenger_cleaner = cleaner
+        challenger_model_info = model_info
+
+    logger.info(
+        f"Successfully loaded {model_type} model: {model_name} version {model_version}"
+    )
+
+
 
 
 @app.get("/")
@@ -177,7 +191,7 @@ async def health_check():
 
     return {
         "status": overall_status,
-        "timestamp": datetime.utcnow(),
+        "timestamp": datetime.now(timezone.utc),
         "champion": {"status": champion_status, **champion_model_info},
         "challenger": {"status": challenger_status, **challenger_model_info},
         "redis": {
@@ -203,19 +217,23 @@ async def get_model_info():
 @app.post("/predict", response_model=PredictionResponse)
 async def predict_credit_risk(request: PredictionRequest):
     """Make a prediction, routing between champion and challenger."""
-    if champion_model is None:
+    if champion_model is None or champion_cleaner is None:
         raise HTTPException(status_code=503, detail="Champion model not loaded")
 
-    use_challenger = challenger_model is not None and random.random() < (
-        challenger_traffic_percentage / 100.0
+    use_challenger = (
+        challenger_model is not None
+        and challenger_cleaner is not None
+        and random.random() < (challenger_traffic_percentage / 100.0)
     )
 
     if use_challenger:
         model = challenger_model
+        cleaner = challenger_cleaner
         model_type = "challenger"
         model_info = challenger_model_info
     else:
         model = champion_model
+        cleaner = champion_cleaner
         model_type = "champion"
         model_info = champion_model_info
 
@@ -238,15 +256,34 @@ async def predict_credit_risk(request: PredictionRequest):
 
     try:
         start_time = time.time()
-        input_data = pd.DataFrame(
-            [input_features.dict(exclude_unset=True, exclude={"loan_id"})]
-        )  # Exclude loan_id from model input
+        
+        # Create a DataFrame from the input features
+        input_data_dict = input_features.model_dump(exclude_unset=True)
+        # Explicitly remove loan_id before cleaning and prediction
+        loan_id_val = input_data_dict.pop("loan_id", None)
+        input_df = pd.DataFrame([input_data_dict])
 
-        prediction_proba = model.predict_proba(input_data)
-        prediction = model.predict(input_data)
+        # Convert all object dtype columns (categorical) to numerical using one-hot encoding
+        for col in input_df.select_dtypes(include=['object']).columns:
+            if col in input_df.columns:
+                dummies = pd.get_dummies(input_df[col], prefix=col)
+                input_df = pd.concat([input_df.drop(columns=[col]), dummies], axis=1)
+
+        # Ensure all columns are float types (for the dummy model, which expects numerical input)
+        scaled_df = input_df.astype(float)
+
+        # Align columns with the model's expected feature names
+        expected_features = model_info.get("feature_names", [])
+        if not expected_features:
+            logger.warning("Model feature names not found. Proceeding without feature alignment.")
+        else:
+            scaled_df = scaled_df.reindex(columns=expected_features, fill_value=0)
+        
+        prediction_proba = model.predict_proba(scaled_df)
+        prediction = model.predict(scaled_df)
 
         prediction_time = time.time() - start_time
-        model_info["last_prediction_time"] = datetime.utcnow()
+        model_info["last_prediction_time"] = datetime.now(timezone.utc)
 
         response = PredictionResponse(
             prediction=int(prediction[0]),
@@ -260,7 +297,7 @@ async def predict_credit_risk(request: PredictionRequest):
             prediction_time_seconds=prediction_time,
             model_name=model_info["model_name"],
             model_version=model_info["model_version"],
-            timestamp=datetime.utcnow(),
+            timestamp=datetime.now(timezone.utc),
         )
 
         prediction_logger.info(
@@ -268,8 +305,8 @@ async def predict_credit_risk(request: PredictionRequest):
             extra={
                 "model_type": model_type,
                 "features_source": features_source,
-                "prediction_details": response.dict(),
-                "input_features": input_features.dict(
+                "prediction_details": response.model_dump(),
+                "input_features": input_features.model_dump(
                     exclude={"loan_id"}
                 ),  # Log features without loan_id
             },
@@ -291,19 +328,23 @@ async def predict_credit_risk_batch(request: BatchPredictionRequest):
     """
     Make credit risk predictions for multiple inputs, routing between champion and challenger.
     """
-    if champion_model is None:
+    if champion_model is None or champion_cleaner is None:
         raise HTTPException(status_code=503, detail="Champion model not loaded")
 
-    use_challenger = challenger_model is not None and random.random() < (
-        challenger_traffic_percentage / 100.0
+    use_challenger = (
+        challenger_model is not None
+        and challenger_cleaner is not None
+        and random.random() < (challenger_traffic_percentage / 100.0)
     )
 
     if use_challenger:
         model = challenger_model
+        cleaner = challenger_cleaner
         model_type = "challenger"
         model_info = challenger_model_info
     else:
         model = champion_model
+        cleaner = champion_cleaner
         model_type = "champion"
         model_info = champion_model_info
 
@@ -328,16 +369,36 @@ async def predict_credit_risk_batch(request: BatchPredictionRequest):
 
     try:
         start_time = time.time()
-        # Exclude loan_id from model input for all items
-        input_data = pd.DataFrame(
-            [f.dict(exclude_unset=True, exclude={"loan_id"}) for f in processed_inputs]
-        )
+        
+        # Create a DataFrame from the batch of inputs
+        input_data_dicts = []
+        for f in processed_inputs:
+            input_data_dict = f.model_dump(exclude_unset=True)
+            input_data_dict.pop("loan_id", None) # Explicitly remove loan_id
+            input_data_dicts.append(input_data_dict)
+        input_df = pd.DataFrame(input_data_dicts)
+        
+        # Convert all object dtype columns (categorical) to numerical using one-hot encoding
+        for col in input_df.select_dtypes(include=['object']).columns:
+            if col in input_df.columns:
+                dummies = pd.get_dummies(input_df[col], prefix=col)
+                input_df = pd.concat([input_df.drop(columns=[col]), dummies], axis=1)
 
-        predictions_proba = model.predict_proba(input_data)
-        predictions = model.predict(input_data)
+        # Ensure all columns are float types (for the dummy model, which expects numerical input)
+        scaled_df = input_df.astype(float)
+
+        # Align columns with the model's expected feature names
+        expected_features = model_info.get("feature_names", [])
+        if not expected_features:
+            logger.warning("Model feature names not found. Proceeding without feature alignment.")
+        else:
+            scaled_df = scaled_df.reindex(columns=expected_features, fill_value=0)
+
+        predictions_proba = model.predict_proba(scaled_df)
+        predictions = model.predict(scaled_df)
 
         prediction_time = time.time() - start_time
-        model_info["last_prediction_time"] = datetime.utcnow()
+        model_info["last_prediction_time"] = datetime.now(timezone.utc)
 
         individual_responses = []
         for i in range(len(predictions)):
@@ -353,11 +414,11 @@ async def predict_credit_risk_batch(request: BatchPredictionRequest):
                 prediction_time_seconds=0.0,
                 model_name=model_info["model_name"],
                 model_version=model_info["model_version"],
-                timestamp=datetime.utcnow(),
+                timestamp=datetime.now(timezone.utc),
             )
             individual_responses.append(individual_response)
 
-            # --- Write-through cache for batch ---
+            # --- Write-through cache ---
             if processed_inputs[i].loan_id:
                 redis_client.set_features(
                     processed_inputs[i].loan_id, processed_inputs[i]
@@ -369,7 +430,7 @@ async def predict_credit_risk_batch(request: BatchPredictionRequest):
             prediction_time_seconds=prediction_time,
             model_name=model_info["model_name"],
             model_version=model_info["model_version"],
-            timestamp=datetime.utcnow(),
+            timestamp=datetime.now(timezone.utc),
         )
 
         prediction_logger.info(
@@ -384,7 +445,7 @@ async def predict_credit_risk_batch(request: BatchPredictionRequest):
                     "model_version": batch_response.model_version,
                 },
                 "individual_predictions": [
-                    p.dict() for p in batch_response.predictions
+                    p.model_dump() for p in batch_response.predictions
                 ],
             },
         )
@@ -417,7 +478,7 @@ async def load_model_endpoint(model_request: ModelLoadRequest):
             message=f"Model {model_request.model_name} version {model_request.model_version} loaded successfully as {model_type}",
             model_name=model_request.model_name,
             model_version=str(model_request.model_version),
-            timestamp=datetime.utcnow(),
+            timestamp=datetime.now(timezone.utc),
         )
     except Exception as e:
         logger.error(f"Failed to load {model_type} model: {str(e)}")

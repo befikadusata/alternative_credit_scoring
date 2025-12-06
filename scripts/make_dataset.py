@@ -24,7 +24,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), ".."))  # noqa: E402
 
 # Import our custom modules
 from src.data.cleaning import DataCleaner
-from src.data.features import FeatureEngineer, apply_feature_engineering
+from src.data.features import FeatureEngineer
 
 
 def setup_logging():
@@ -106,15 +106,18 @@ def main(
 
     # Step 1: Clean the data
     logger.info("Starting data cleaning...")
-    df_cleaned = cleaner.clean_loan_data(df)
+    # Exclude the 'Default' column from cleaning, as it's the target and will be handled by FeatureEngineer
+    df_cleaned = cleaner.clean_loan_data(df, exclude_columns=["Default"])
     logger.info(f"Data cleaning completed. Shape after cleaning: {df_cleaned.shape}")
 
     # Step 2: Engineer features
     logger.info("Starting feature engineering...")
-    df_engineered = apply_feature_engineering(df_cleaned)
+    df_engineered = engineer.create_features(df_cleaned)
+    df_engineered = engineer.create_target_variable(df_engineered, "default") # Ensure target is created during feature engineering
     logger.info(
         f"Feature engineering completed. Shape after feature engineering: {df_engineered.shape}"
     )
+
 
     # Step 3: Create target variable if not already present
     if (

@@ -5,6 +5,7 @@ This script runs the baseline model training with default parameters to establis
 a performance benchmark for the credit scoring model.
 """
 
+import os
 import subprocess
 import sys
 
@@ -15,6 +16,9 @@ def run_baseline_training():
     """
     print("Starting baseline model training...")
     print("This will train an XGBoost model as the default baseline.")
+
+    # Set MLflow tracking URI
+    os.environ["MLFLOW_TRACKING_URI"] = "http://localhost:5000"
 
     # Construct the command to run the training script
     cmd = [

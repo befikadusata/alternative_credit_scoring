@@ -10,8 +10,7 @@ import logging
 import os
 import sys
 
-import mlflow
-import mlflow.sklearn
+import joblib
 import pandas as pd
 import xgboost as xgb
 from sklearn.ensemble import RandomForestClassifier
@@ -29,6 +28,8 @@ from sklearn.model_selection import cross_val_score, train_test_split
 
 # Add the src directory to the path so we can import our modules
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+
+from data.cleaning import DataCleaner
 
 
 def setup_logging():
@@ -112,8 +113,8 @@ def train_logistic_regression(X_train, y_train, X_val=None, y_val=None, **params
     model.fit(X_train, y_train)
 
     # Log parameters
-    for param_name, param_value in default_params.items():
-        mlflow.log_param(f"logistic_regression_{param_name}", param_value)
+    # for param_name, param_value in default_params.items():
+    #     mlflow.log_param(f"logistic_regression_{param_name}", param_value)
 
     logger.info("Logistic Regression training completed")
     return model
@@ -143,9 +144,23 @@ def train_xgboost(X_train, y_train, X_val=None, y_val=None, **params):
         "max_depth": 6,
         "learning_rate": 0.1,
         "n_estimators": 100,
-        "scale_pos_weight": len(y_train[y_train == 0])
-        / len(y_train[y_train == 1]),  # Handle class imbalance
     }
+
+    num_negative_samples = len(y_train[y_train == 0])
+    num_positive_samples = len(y_train[y_train == 1])
+
+    if num_positive_samples == 0:
+        logger.warning(
+            "No positive samples in training data. Setting scale_pos_weight to 1."
+        )
+        default_params["scale_pos_weight"] = 1
+    elif num_negative_samples == 0:
+        logger.warning(
+            "No negative samples in training data. Setting scale_pos_weight to 1."
+        )
+        default_params["scale_pos_weight"] = 1
+    else:
+        default_params["scale_pos_weight"] = num_negative_samples / num_positive_samples
 
     # Override defaults with provided params
     default_params.update(params)
@@ -166,8 +181,8 @@ def train_xgboost(X_train, y_train, X_val=None, y_val=None, **params):
     )
 
     # Log parameters
-    for param_name, param_value in default_params.items():
-        mlflow.log_param(f"xgboost_{param_name}", param_value)
+    # for param_name, param_value in default_params.items():
+    #     mlflow.log_param(f"xgboost_{param_name}", param_value)
 
     logger.info("XGBoost training completed")
     return model
@@ -206,8 +221,8 @@ def train_random_forest(X_train, y_train, X_val=None, y_val=None, **params):
     model.fit(X_train, y_train)
 
     # Log parameters
-    for param_name, param_value in default_params.items():
-        mlflow.log_param(f"random_forest_{param_name}", param_value)
+    # for param_name, param_value in default_params.items():
+    #     mlflow.log_param(f"random_forest_{param_name}", param_value)
 
     logger.info("Random Forest training completed")
     return model
@@ -215,7 +230,7 @@ def train_random_forest(X_train, y_train, X_val=None, y_val=None, **params):
 
 def evaluate_model(model, X_test, y_test, model_name="Model"):
     """
-    Evaluate a trained model and log metrics to MLflow.
+    Evaluate a trained model.
 
     Args:
         model: Trained model
@@ -246,46 +261,23 @@ def evaluate_model(model, X_test, y_test, model_name="Model"):
     else:
         auc = -1  # Placeholder if AUC cannot be calculated
 
-    # Log metrics to MLflow
-    mlflow.log_metric("accuracy", accuracy)
-    mlflow.log_metric("precision", precision)
-    mlflow.log_metric("recall", recall)
-    mlflow.log_metric("f1_score", f1)
-    if auc != -1:
-        mlflow.log_metric("auc", auc)
+    logger.info(
+        f"{model_name} - Accuracy: {accuracy:.4f}, Precision: {precision:.4f}, "
+        f"Recall: {recall:.4f}, F1: {f1:.4f}, AUC: {auc:.4f}"
+    )
 
     # Cross-validation score
     cv_scores = cross_val_score(model, X_test, y_test, cv=5, scoring="roc_auc")
     cv_mean = cv_scores.mean()
     cv_std = cv_scores.std()
-    mlflow.log_metric("cv_auc_mean", cv_mean)
-    mlflow.log_metric("cv_auc_std", cv_std)
 
-    logger.info(
-        f"{model_name} - Accuracy: {accuracy:.4f}, Precision: {precision:.4f}, "
-        f"Recall: {recall:.4f}, F1: {f1:.4f}, AUC: {auc:.4f}"
-    )
     logger.info(f"{model_name} - CV AUC: {cv_mean:.4f} (+/- {cv_std * 2:.4f})")
 
     # Classification report
     class_report = classification_report(y_test, y_pred, output_dict=True)
 
-    # Log detailed metrics for each class
-    for class_name, metrics in class_report.items():
-        if isinstance(metrics, dict):
-            if "precision" in metrics:
-                mlflow.log_metric(f"precision_class_{class_name}", metrics["precision"])
-            if "recall" in metrics:
-                mlflow.log_metric(f"recall_class_{class_name}", metrics["recall"])
-            if "f1-score" in metrics:
-                mlflow.log_metric(f"f1_class_{class_name}", metrics["f1-score"])
-
     # Confusion matrix
     cm = confusion_matrix(y_test, y_pred)
-    mlflow.log_metric("tn", cm[0, 0])
-    mlflow.log_metric("fp", cm[0, 1])
-    mlflow.log_metric("fn", cm[1, 0])
-    mlflow.log_metric("tp", cm[1, 1])
 
     # Log metrics dict to return
     metrics = {
@@ -308,7 +300,6 @@ def main(
     model_type: str = "xgboost",
     test_size: float = 0.2,
     random_state: int = 42,
-    mlflow_tracking_uri: str = "http://localhost:5000",
 ):
     """
     Main function to train a baseline model.
@@ -318,92 +309,53 @@ def main(
         model_type: Type of model to train ('logistic_regression', 'xgboost', or 'random_forest')
         test_size: Proportion of data to use for validation
         random_state: Random seed for reproducibility
-        mlflow_tracking_uri: URI for MLflow tracking server
     """
     logger = logging.getLogger(__name__)
     logger.info("Starting baseline model training...")
 
-    # Set up MLflow
-    if mlflow_tracking_uri:
-        mlflow.set_tracking_uri(mlflow_tracking_uri)
+    # Load data
+    X, y = load_data(train_data_path)
 
-    # Create or get the experiment
-    experiment_name = "Credit_Scoring_Baseline_Models"
-    try:
-        experiment_id = mlflow.create_experiment(experiment_name)
-    except Exception as e:
-        # If experiment already exists, get its ID
-        logger.debug(f"Experiment creation failed (likely already exists): {str(e)}")
-        experiment = mlflow.get_experiment_by_name(experiment_name)
-        experiment_id = experiment.experiment_id
+    # Split data
+    logger.info(
+        f"Splitting data with test_size={test_size}, random_state={random_state}"
+    )
+    X_train, X_val, y_train, y_val = train_test_split(
+        X, y, test_size=test_size, random_state=random_state, stratify=y
+    )
 
-    # Start MLflow run
-    with mlflow.start_run(experiment_id=experiment_id):
-        # Log parameters
-        mlflow.log_param("model_type", model_type)
-        mlflow.log_param("test_size", test_size)
-        mlflow.log_param("random_state", random_state)
+    logger.info(f"Training set: {X_train.shape}, Validation set: {X_val.shape}")
 
-        # Load data
-        X, y = load_data(train_data_path)
+    # Initialize and use DataCleaner
+    cleaner = DataCleaner()
+    X_train = cleaner.clean_loan_data(X_train, exclude_columns=["default"])
+    X_val = cleaner.clean_loan_data(X_val, exclude_columns=["default"])
 
-        # Split data
-        logger.info(
-            f"Splitting data with test_size={test_size}, random_state={random_state}"
-        )
-        X_train, X_val, y_train, y_val = train_test_split(
-            X, y, test_size=test_size, random_state=random_state, stratify=y
-        )
+    X_train = cleaner.encode_categorical_features(X_train, fit=True)
+    X_val = cleaner.encode_categorical_features(X_val, fit=False)
 
-        logger.info(f"Training set: {X_train.shape}, Validation set: {X_val.shape}")
+    X_train = cleaner.scale_numerical_features(X_train, fit=True)
+    X_val = cleaner.scale_numerical_features(X_val, fit=False)
 
-        # Handle missing values by filling with median for numeric columns
-        numeric_cols = X_train.select_dtypes(include=["int64", "float64"]).columns
-        X_train[numeric_cols] = X_train[numeric_cols].fillna(
-            X_train[numeric_cols].median()
-        )
-        X_val[numeric_cols] = X_val[numeric_cols].fillna(
-            X_train[numeric_cols].median()
-        )  # Use training median
+    # Save the cleaner
+    cleaner_path = "data_cleaner.joblib"
+    joblib.dump(cleaner, cleaner_path)
+    # mlflow.log_artifact(cleaner_path, "preprocessor")
 
-        # Initialize and train model based on type
-        if model_type == "logistic_regression":
-            model = train_logistic_regression(X_train, y_train, X_val, y_val)
-        elif model_type == "xgboost":
-            model = train_xgboost(X_train, y_train, X_val, y_val)
-        elif model_type == "random_forest":
-            model = train_random_forest(X_train, y_train, X_val, y_val)
-        else:
-            raise ValueError(f"Unsupported model type: {model_type}")
 
-        # Evaluate model
-        logger.info("Evaluating model performance...")
-        metrics = evaluate_model(model, X_val, y_val, model_type)
+    # Initialize and train model based on type
+    if model_type == "logistic_regression":
+        model = train_logistic_regression(X_train, y_train, X_val, y_val)
+    elif model_type == "xgboost":
+        model = train_xgboost(X_train, y_train, X_val, y_val)
+    elif model_type == "random_forest":
+        model = train_random_forest(X_train, y_train, X_val, y_val)
+    else:
+        raise ValueError(f"Unsupported model type: {model_type}")
 
-        # Log the model to MLflow
-        if model_type in ["logistic_regression", "random_forest"]:
-            mlflow.sklearn.log_model(
-                sk_model=model,
-                artifact_path="model",
-                conda_env=(
-                    "environment.yml" if os.path.exists("environment.yml") else None
-                ),
-                registered_model_name=f"credit_scoring_{model_type}",
-            )
-        elif model_type == "xgboost":
-            mlflow.xgboost.log_model(
-                xgb_model=model,
-                artifact_path="model",
-                conda_env=(
-                    "environment.yml" if os.path.exists("environment.yml") else None
-                ),
-                registered_model_name=f"credit_scoring_{model_type}",
-            )
-
-        logger.info(
-            f"Model training completed. Run ID: {mlflow.active_run().info.run_id}"
-        )
-        logger.info(f"Model registered as: credit_scoring_{model_type}")
+    # Evaluate model
+    logger.info("Evaluating model performance...")
+    metrics = evaluate_model(model, X_val, y_val, model_type)
 
     return model, metrics
 
@@ -439,12 +391,6 @@ if __name__ == "__main__":
         default=42,
         help="Random seed for reproducibility (default: 42)",
     )
-    parser.add_argument(
-        "--mlflow_tracking_uri",
-        type=str,
-        default="http://localhost:5000",
-        help="MLflow tracking URI (default: http://localhost:5000)",
-    )
 
     args = parser.parse_args()
 
@@ -454,7 +400,6 @@ if __name__ == "__main__":
             model_type=args.model_type,
             test_size=args.test_size,
             random_state=args.random_state,
-            mlflow_tracking_uri=args.mlflow_tracking_uri,
         )
 
         logger.info("Baseline model training completed successfully!")

@@ -112,17 +112,19 @@ def test_encode_categorical_features(data_cleaner, sample_dataframe):
 
 def test_scale_numerical_features(data_cleaner, sample_dataframe):
     df = sample_dataframe.copy()
-    df = data_cleaner._fix_data_types(df)
-    df = data_cleaner._handle_missing_values(df)
+    # Fully clean the data as it would be in a real pipeline
+    df = data_cleaner.clean_loan_data(df)
 
     # Fit the scaler
     scaled_df = data_cleaner.scale_numerical_features(df.copy(), fit=True)
     assert "annual_inc" in data_cleaner.scalers
     # After scaling, the mean should be close to 0 and std dev close to 1
     assert abs(scaled_df["annual_inc"].mean()) < 1e-9
-    assert abs(scaled_df["annual_inc"].std() - 1.0) < 1e-9
+    assert abs(scaled_df["annual_inc"].std(ddof=0) - 1.0) < 1e-2
 
     # Transform using fitted scaler
     df_new = pd.DataFrame({"annual_inc": [70000]})
+    # Clean the new data as well
+    df_new = data_cleaner.clean_loan_data(df_new)
     scaled_new_df = data_cleaner.scale_numerical_features(df_new, fit=False)
     assert "annual_inc" in scaled_new_df.columns

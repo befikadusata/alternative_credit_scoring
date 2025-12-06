@@ -1,0 +1,613 @@
+2025-12-06 14:05:26,633 - __main__ - INFO - Starting baseline model training...
+2025-12-06 14:05:26,778 - urllib3.connectionpool - WARNING - Retrying (Retry(total=6, connect=6, read=7, redirect=7, status=7)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7de65c116cf0>: Failed to establish a new connection: [Errno 111] Connection refused')': /api/2.0/mlflow/experiments/create
+2025-12-06 14:05:30,903 - urllib3.connectionpool - WARNING - Retrying (Retry(total=5, connect=5, read=7, redirect=7, status=7)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7de65bf911d0>: Failed to establish a new connection: [Errno 111] Connection refused')': /api/2.0/mlflow/experiments/create
+2025-12-06 14:05:39,253 - urllib3.connectionpool - WARNING - Retrying (Retry(total=4, connect=4, read=7, redirect=7, status=7)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7de65bf91310>: Failed to establish a new connection: [Errno 111] Connection refused')': /api/2.0/mlflow/experiments/create
+2025-12-06 14:05:55,727 - urllib3.connectionpool - WARNING - Retrying (Retry(total=3, connect=3, read=7, redirect=7, status=7)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7de65c0eefd0>: Failed to establish a new connection: [Errno 111] Connection refused')': /api/2.0/mlflow/experiments/create
+2025-12-06 14:06:28,369 - urllib3.connectionpool - WARNING - Retrying (Retry(total=2, connect=2, read=7, redirect=7, status=7)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7de65c0ef230>: Failed to establish a new connection: [Errno 111] Connection refused')': /api/2.0/mlflow/experiments/create
+2025-12-06 14:07:32,539 - urllib3.connectionpool - WARNING - Retrying (Retry(total=1, connect=1, read=7, redirect=7, status=7)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7de65c12ef90>: Failed to establish a new connection: [Errno 111] Connection refused')': /api/2.0/mlflow/experiments/create
+2025-12-06 14:09:32,541 - urllib3.connectionpool - WARNING - Retrying (Retry(total=0, connect=0, read=7, redirect=7, status=7)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7de65bf79d00>: Failed to establish a new connection: [Errno 111] Connection refused')': /api/2.0/mlflow/experiments/create
+2025-12-06 14:09:32,544 - urllib3.connectionpool - WARNING - Retrying (Retry(total=6, connect=6, read=7, redirect=7, status=7)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7de65bf7a250>: Failed to establish a new connection: [Errno 111] Connection refused')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 14:09:37,243 - urllib3.connectionpool - WARNING - Retrying (Retry(total=5, connect=5, read=7, redirect=7, status=7)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7de65bf7a690>: Failed to establish a new connection: [Errno 111] Connection refused')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 14:09:45,942 - urllib3.connectionpool - WARNING - Retrying (Retry(total=4, connect=4, read=7, redirect=7, status=7)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7de65bf7a8b0>: Failed to establish a new connection: [Errno 111] Connection refused')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 14:10:02,847 - urllib3.connectionpool - WARNING - Retrying (Retry(total=3, connect=3, read=7, redirect=7, status=7)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7de65bf7aad0>: Failed to establish a new connection: [Errno 111] Connection refused')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 14:10:35,535 - urllib3.connectionpool - WARNING - Retrying (Retry(total=2, connect=2, read=7, redirect=7, status=7)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7de65bf7acf0>: Failed to establish a new connection: [Errno 111] Connection refused')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 14:11:39,544 - urllib3.connectionpool - WARNING - Retrying (Retry(total=1, connect=1, read=7, redirect=7, status=7)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7de65bf7af10>: Failed to establish a new connection: [Errno 111] Connection refused')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 14:13:39,546 - urllib3.connectionpool - WARNING - Retrying (Retry(total=0, connect=0, read=7, redirect=7, status=7)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7de65bf7b130>: Failed to establish a new connection: [Errno 111] Connection refused')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 14:13:39,547 - __main__ - ERROR - Model training failed with error: API request to http://localhost:5000/api/2.0/mlflow/experiments/get-by-name failed with exception HTTPConnectionPool(host='localhost', port=5000): Max retries exceeded with url: /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7de65bf7b350>: Failed to establish a new connection: [Errno 111] Connection refused'))
+2025-12-06 14:26:50,407 - __main__ - INFO - Starting baseline model training...
+2025-12-06 14:26:50,551 - urllib3.connectionpool - WARNING - Retrying (Retry(total=6, connect=7, read=6, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/create
+2025-12-06 14:26:54,685 - urllib3.connectionpool - WARNING - Retrying (Retry(total=5, connect=7, read=5, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/create
+2025-12-06 14:27:03,381 - urllib3.connectionpool - WARNING - Retrying (Retry(total=4, connect=7, read=4, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/create
+2025-12-06 14:27:19,626 - urllib3.connectionpool - WARNING - Retrying (Retry(total=3, connect=7, read=3, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/create
+2025-12-06 14:27:52,298 - urllib3.connectionpool - WARNING - Retrying (Retry(total=2, connect=7, read=2, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/create
+2025-12-06 14:28:56,414 - urllib3.connectionpool - WARNING - Retrying (Retry(total=1, connect=7, read=1, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/create
+2025-12-06 14:30:56,418 - urllib3.connectionpool - WARNING - Retrying (Retry(total=0, connect=7, read=0, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/create
+2025-12-06 14:30:56,431 - urllib3.connectionpool - WARNING - Retrying (Retry(total=6, connect=7, read=6, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 14:31:01,115 - urllib3.connectionpool - WARNING - Retrying (Retry(total=5, connect=7, read=5, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 14:31:09,927 - urllib3.connectionpool - WARNING - Retrying (Retry(total=4, connect=7, read=4, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 14:31:26,848 - urllib3.connectionpool - WARNING - Retrying (Retry(total=3, connect=7, read=3, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 14:31:59,824 - urllib3.connectionpool - WARNING - Retrying (Retry(total=2, connect=7, read=2, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 14:33:04,357 - urllib3.connectionpool - WARNING - Retrying (Retry(total=1, connect=7, read=1, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 14:35:04,358 - urllib3.connectionpool - WARNING - Retrying (Retry(total=0, connect=7, read=0, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 14:35:04,360 - __main__ - ERROR - Model training failed with error: API request to http://localhost:5000/api/2.0/mlflow/experiments/get-by-name failed with exception HTTPConnectionPool(host='localhost', port=5000): Max retries exceeded with url: /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models (Caused by ProtocolError('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer')))
+2025-12-06 14:35:53,731 - __main__ - INFO - Starting baseline model training...
+2025-12-06 14:35:53,879 - urllib3.connectionpool - WARNING - Retrying (Retry(total=6, connect=7, read=6, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/create
+2025-12-06 14:35:58,727 - urllib3.connectionpool - WARNING - Retrying (Retry(total=5, connect=7, read=5, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/create
+2025-12-06 14:36:07,462 - urllib3.connectionpool - WARNING - Retrying (Retry(total=4, connect=7, read=4, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/create
+2025-12-06 14:36:23,726 - urllib3.connectionpool - WARNING - Retrying (Retry(total=3, connect=7, read=3, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/create
+2025-12-06 14:36:56,342 - urllib3.connectionpool - WARNING - Retrying (Retry(total=2, connect=7, read=2, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/create
+2025-12-06 14:38:00,650 - urllib3.connectionpool - WARNING - Retrying (Retry(total=1, connect=7, read=1, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/create
+2025-12-06 14:40:00,653 - urllib3.connectionpool - WARNING - Retrying (Retry(total=0, connect=7, read=0, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/create
+2025-12-06 14:40:00,660 - urllib3.connectionpool - WARNING - Retrying (Retry(total=6, connect=7, read=6, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 14:40:05,170 - urllib3.connectionpool - WARNING - Retrying (Retry(total=5, connect=7, read=5, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 14:40:13,338 - urllib3.connectionpool - WARNING - Retrying (Retry(total=4, connect=7, read=4, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 14:40:30,043 - urllib3.connectionpool - WARNING - Retrying (Retry(total=3, connect=7, read=3, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 14:41:02,514 - urllib3.connectionpool - WARNING - Retrying (Retry(total=2, connect=7, read=2, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 14:42:07,044 - urllib3.connectionpool - WARNING - Retrying (Retry(total=1, connect=7, read=1, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 14:44:07,046 - urllib3.connectionpool - WARNING - Retrying (Retry(total=0, connect=7, read=0, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 14:44:07,048 - __main__ - ERROR - Model training failed with error: API request to http://localhost:5000/api/2.0/mlflow/experiments/get-by-name failed with exception HTTPConnectionPool(host='localhost', port=5000): Max retries exceeded with url: /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models (Caused by ProtocolError('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer')))
+2025-12-06 14:44:54,740 - __main__ - INFO - Starting baseline model training...
+2025-12-06 14:44:54,893 - urllib3.connectionpool - WARNING - Retrying (Retry(total=6, connect=7, read=6, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/create
+2025-12-06 14:44:59,827 - urllib3.connectionpool - WARNING - Retrying (Retry(total=5, connect=7, read=5, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/create
+2025-12-06 14:45:08,084 - urllib3.connectionpool - WARNING - Retrying (Retry(total=4, connect=7, read=4, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/create
+2025-12-06 14:45:24,712 - urllib3.connectionpool - WARNING - Retrying (Retry(total=3, connect=7, read=3, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/create
+2025-12-06 14:45:57,581 - urllib3.connectionpool - WARNING - Retrying (Retry(total=2, connect=7, read=2, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/create
+2025-12-06 14:47:02,180 - urllib3.connectionpool - WARNING - Retrying (Retry(total=1, connect=7, read=1, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/create
+2025-12-06 14:49:02,182 - urllib3.connectionpool - WARNING - Retrying (Retry(total=0, connect=7, read=0, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/create
+2025-12-06 14:49:02,193 - urllib3.connectionpool - WARNING - Retrying (Retry(total=6, connect=7, read=6, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 14:49:06,416 - urllib3.connectionpool - WARNING - Retrying (Retry(total=5, connect=7, read=5, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 14:49:14,668 - urllib3.connectionpool - WARNING - Retrying (Retry(total=4, connect=7, read=4, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 14:49:31,199 - urllib3.connectionpool - WARNING - Retrying (Retry(total=3, connect=7, read=3, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 14:50:03,689 - urllib3.connectionpool - WARNING - Retrying (Retry(total=2, connect=7, read=2, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 14:51:08,345 - urllib3.connectionpool - WARNING - Retrying (Retry(total=1, connect=7, read=1, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 14:53:08,347 - urllib3.connectionpool - WARNING - Retrying (Retry(total=0, connect=7, read=0, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 14:53:08,349 - __main__ - ERROR - Model training failed with error: API request to http://localhost:5000/api/2.0/mlflow/experiments/get-by-name failed with exception HTTPConnectionPool(host='localhost', port=5000): Max retries exceeded with url: /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models (Caused by ProtocolError('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer')))
+2025-12-06 14:55:15,634 - __main__ - INFO - Starting baseline model training...
+2025-12-06 14:55:15,784 - urllib3.connectionpool - WARNING - Retrying (Retry(total=6, connect=7, read=6, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/create
+2025-12-06 14:55:19,990 - urllib3.connectionpool - WARNING - Retrying (Retry(total=5, connect=7, read=5, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/create
+2025-12-06 14:55:28,261 - urllib3.connectionpool - WARNING - Retrying (Retry(total=4, connect=7, read=4, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/create
+2025-12-06 14:55:44,487 - urllib3.connectionpool - WARNING - Retrying (Retry(total=3, connect=7, read=3, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/create
+2025-12-06 14:56:16,787 - urllib3.connectionpool - WARNING - Retrying (Retry(total=2, connect=7, read=2, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/create
+2025-12-06 14:57:21,036 - urllib3.connectionpool - WARNING - Retrying (Retry(total=1, connect=7, read=1, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/create
+2025-12-06 14:59:21,038 - urllib3.connectionpool - WARNING - Retrying (Retry(total=0, connect=7, read=0, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/create
+2025-12-06 14:59:21,047 - urllib3.connectionpool - WARNING - Retrying (Retry(total=6, connect=7, read=6, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 14:59:25,825 - urllib3.connectionpool - WARNING - Retrying (Retry(total=5, connect=7, read=5, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 14:59:34,445 - urllib3.connectionpool - WARNING - Retrying (Retry(total=4, connect=7, read=4, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 14:59:50,512 - urllib3.connectionpool - WARNING - Retrying (Retry(total=3, connect=7, read=3, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 15:00:23,348 - urllib3.connectionpool - WARNING - Retrying (Retry(total=2, connect=7, read=2, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 15:01:27,658 - urllib3.connectionpool - WARNING - Retrying (Retry(total=1, connect=7, read=1, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 15:03:27,660 - urllib3.connectionpool - WARNING - Retrying (Retry(total=0, connect=7, read=0, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 15:03:27,662 - __main__ - ERROR - Model training failed with error: API request to http://localhost:5000/api/2.0/mlflow/experiments/get-by-name failed with exception HTTPConnectionPool(host='localhost', port=5000): Max retries exceeded with url: /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models (Caused by ProtocolError('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer')))
+2025-12-06 15:05:07,104 - __main__ - INFO - Starting baseline model training...
+2025-12-06 15:05:07,251 - urllib3.connectionpool - WARNING - Retrying (Retry(total=6, connect=6, read=7, redirect=7, status=7)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0x76a20fe12270>: Failed to establish a new connection: [Errno 111] Connection refused')': /api/2.0/mlflow/experiments/create
+2025-12-06 15:05:11,347 - urllib3.connectionpool - WARNING - Retrying (Retry(total=5, connect=5, read=7, redirect=7, status=7)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0x76a20fc84690>: Failed to establish a new connection: [Errno 111] Connection refused')': /api/2.0/mlflow/experiments/create
+2025-12-06 15:05:19,585 - urllib3.connectionpool - WARNING - Retrying (Retry(total=4, connect=4, read=7, redirect=7, status=7)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0x76a20fc847d0>: Failed to establish a new connection: [Errno 111] Connection refused')': /api/2.0/mlflow/experiments/create
+2025-12-06 15:05:35,879 - urllib3.connectionpool - WARNING - Retrying (Retry(total=3, connect=3, read=7, redirect=7, status=7)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0x76a20fdee8b0>: Failed to establish a new connection: [Errno 111] Connection refused')': /api/2.0/mlflow/experiments/create
+2025-12-06 15:06:07,943 - urllib3.connectionpool - WARNING - Retrying (Retry(total=2, connect=2, read=7, redirect=7, status=7)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0x76a20fdeeb10>: Failed to establish a new connection: [Errno 111] Connection refused')': /api/2.0/mlflow/experiments/create
+2025-12-06 15:07:12,862 - urllib3.connectionpool - WARNING - Retrying (Retry(total=1, connect=1, read=7, redirect=7, status=7)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0x76a20fe1ad50>: Failed to establish a new connection: [Errno 111] Connection refused')': /api/2.0/mlflow/experiments/create
+2025-12-06 15:09:12,863 - urllib3.connectionpool - WARNING - Retrying (Retry(total=0, connect=0, read=7, redirect=7, status=7)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0x76a20fc59bf0>: Failed to establish a new connection: [Errno 111] Connection refused')': /api/2.0/mlflow/experiments/create
+2025-12-06 15:09:12,868 - urllib3.connectionpool - WARNING - Retrying (Retry(total=6, connect=6, read=7, redirect=7, status=7)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0x76a20fc5a140>: Failed to establish a new connection: [Errno 111] Connection refused')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 15:09:17,308 - urllib3.connectionpool - WARNING - Retrying (Retry(total=5, connect=5, read=7, redirect=7, status=7)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0x76a20fc5a580>: Failed to establish a new connection: [Errno 111] Connection refused')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 15:09:26,083 - urllib3.connectionpool - WARNING - Retrying (Retry(total=4, connect=4, read=7, redirect=7, status=7)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0x76a20fc5a7a0>: Failed to establish a new connection: [Errno 111] Connection refused')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 15:09:42,525 - urllib3.connectionpool - WARNING - Retrying (Retry(total=3, connect=3, read=7, redirect=7, status=7)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0x76a20fc5a9c0>: Failed to establish a new connection: [Errno 111] Connection refused')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 15:10:15,518 - urllib3.connectionpool - WARNING - Retrying (Retry(total=2, connect=2, read=7, redirect=7, status=7)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0x76a20fc5abe0>: Failed to establish a new connection: [Errno 111] Connection refused')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 15:11:19,689 - urllib3.connectionpool - WARNING - Retrying (Retry(total=1, connect=1, read=7, redirect=7, status=7)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0x76a20fc5ae00>: Failed to establish a new connection: [Errno 111] Connection refused')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 15:13:19,690 - urllib3.connectionpool - WARNING - Retrying (Retry(total=0, connect=0, read=7, redirect=7, status=7)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0x76a20fc5b020>: Failed to establish a new connection: [Errno 111] Connection refused')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 15:13:19,691 - __main__ - ERROR - Model training failed with error: API request to http://localhost:5000/api/2.0/mlflow/experiments/get-by-name failed with exception HTTPConnectionPool(host='localhost', port=5000): Max retries exceeded with url: /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x76a20fc5b240>: Failed to establish a new connection: [Errno 111] Connection refused'))
+2025-12-06 15:17:24,264 - __main__ - INFO - Starting baseline model training...
+2025-12-06 15:17:24,412 - urllib3.connectionpool - WARNING - Retrying (Retry(total=6, connect=7, read=6, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/create
+2025-12-06 15:17:28,444 - urllib3.connectionpool - WARNING - Retrying (Retry(total=5, connect=7, read=5, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/create
+2025-12-06 15:17:37,136 - urllib3.connectionpool - WARNING - Retrying (Retry(total=4, connect=7, read=4, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/create
+2025-12-06 15:17:53,920 - urllib3.connectionpool - WARNING - Retrying (Retry(total=3, connect=7, read=3, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/create
+2025-12-06 15:18:25,933 - urllib3.connectionpool - WARNING - Retrying (Retry(total=2, connect=7, read=2, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/create
+2025-12-06 15:19:30,036 - urllib3.connectionpool - WARNING - Retrying (Retry(total=1, connect=7, read=1, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/create
+2025-12-06 15:21:30,038 - urllib3.connectionpool - WARNING - Retrying (Retry(total=0, connect=7, read=0, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/create
+2025-12-06 15:21:30,048 - urllib3.connectionpool - WARNING - Retrying (Retry(total=6, connect=7, read=6, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 15:21:34,641 - urllib3.connectionpool - WARNING - Retrying (Retry(total=5, connect=7, read=5, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 15:21:42,986 - urllib3.connectionpool - WARNING - Retrying (Retry(total=4, connect=7, read=4, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 15:21:59,688 - urllib3.connectionpool - WARNING - Retrying (Retry(total=3, connect=7, read=3, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 15:22:31,740 - urllib3.connectionpool - WARNING - Retrying (Retry(total=2, connect=7, read=2, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 15:23:36,521 - urllib3.connectionpool - WARNING - Retrying (Retry(total=1, connect=7, read=1, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 15:25:36,522 - urllib3.connectionpool - WARNING - Retrying (Retry(total=0, connect=7, read=0, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 15:25:36,524 - __main__ - ERROR - Model training failed with error: API request to http://localhost:5000/api/2.0/mlflow/experiments/get-by-name failed with exception HTTPConnectionPool(host='localhost', port=5000): Max retries exceeded with url: /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models (Caused by ProtocolError('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer')))
+2025-12-06 15:29:08,264 - __main__ - INFO - Starting baseline model training...
+2025-12-06 15:29:08,264 - __main__ - INFO - Loading training data from data/processed/train.csv
+2025-12-06 15:29:10,056 - __main__ - INFO - Loaded data with shape: (1078144, 21)
+2025-12-06 15:29:10,056 - __main__ - ERROR - Model training failed with error: Target column 'default' not found in the dataset
+2025-12-06 15:31:35,066 - __main__ - INFO - Starting baseline model training...
+2025-12-06 15:31:35,067 - __main__ - INFO - Loading training data from data/processed/train.csv
+2025-12-06 15:31:36,288 - __main__ - INFO - Loaded data with shape: (1078144, 21)
+2025-12-06 15:31:36,355 - __main__ - INFO - Features shape: (1078144, 20), Target shape: (1078144,)
+2025-12-06 15:31:36,417 - __main__ - INFO - Numeric features: 12
+2025-12-06 15:31:36,417 - __main__ - INFO - Categorical features: 8
+2025-12-06 15:31:36,429 - __main__ - INFO - Splitting data with test_size=0.2, random_state=42
+2025-12-06 15:31:36,816 - __main__ - INFO - Training set: (862515, 20), Validation set: (215629, 20)
+2025-12-06 15:31:36,816 - data.cleaning - INFO - Starting data cleaning process...
+2025-12-06 15:31:37,289 - data.cleaning - INFO - Removed 0 duplicate rows
+2025-12-06 15:31:37,338 - data.cleaning - INFO - Handling missing values...
+2025-12-06 15:31:37,468 - data.cleaning - WARNING - Column issue_d has 100.00% missing values. Consider dropping this column.
+2025-12-06 15:31:37,487 - data.cleaning - WARNING - Column desc has 91.17% missing values. Consider dropping this column.
+2025-12-06 15:31:37,487 - data.cleaning - INFO - Removing outliers...
+2025-12-06 15:31:37,567 - data.cleaning - INFO - Found 43864 outliers in revenue
+2025-12-06 15:31:37,719 - data.cleaning - INFO - Found 173735 outliers in is_debt_consolidation
+2025-12-06 15:31:37,766 - data.cleaning - INFO - Found 13262 outliers in issue_year
+2025-12-06 15:31:37,798 - data.cleaning - INFO - Validating data ranges...
+2025-12-06 15:31:37,801 - data.cleaning - INFO - Data cleaning completed. Final shape: (862515, 20)
+2025-12-06 15:31:37,814 - data.cleaning - INFO - Starting data cleaning process...
+2025-12-06 15:31:37,916 - data.cleaning - INFO - Removed 0 duplicate rows
+2025-12-06 15:31:37,928 - data.cleaning - INFO - Handling missing values...
+2025-12-06 15:31:37,964 - data.cleaning - WARNING - Column issue_d has 100.00% missing values. Consider dropping this column.
+2025-12-06 15:31:37,968 - data.cleaning - WARNING - Column desc has 91.17% missing values. Consider dropping this column.
+2025-12-06 15:31:37,968 - data.cleaning - INFO - Removing outliers...
+2025-12-06 15:31:37,991 - data.cleaning - INFO - Found 898 outliers in dti_n
+2025-12-06 15:31:38,019 - data.cleaning - INFO - Found 43254 outliers in is_debt_consolidation
+2025-12-06 15:31:38,030 - data.cleaning - INFO - Found 3370 outliers in issue_year
+2025-12-06 15:31:38,038 - data.cleaning - INFO - Validating data ranges...
+2025-12-06 15:31:38,040 - data.cleaning - INFO - Data cleaning completed. Final shape: (215629, 20)
+2025-12-06 15:31:39,073 - __main__ - ERROR - Model training failed with error: y contains previously unseen labels: 'UNKNOWN'
+2025-12-06 15:34:29,518 - __main__ - INFO - Starting baseline model training...
+2025-12-06 15:34:29,518 - __main__ - INFO - Loading training data from data/processed/train.csv
+2025-12-06 15:34:30,712 - __main__ - INFO - Loaded data with shape: (1078144, 21)
+2025-12-06 15:34:30,776 - __main__ - INFO - Features shape: (1078144, 20), Target shape: (1078144,)
+2025-12-06 15:34:30,842 - __main__ - INFO - Numeric features: 12
+2025-12-06 15:34:30,842 - __main__ - INFO - Categorical features: 8
+2025-12-06 15:34:30,854 - __main__ - INFO - Splitting data with test_size=0.2, random_state=42
+2025-12-06 15:34:31,250 - __main__ - INFO - Training set: (862515, 20), Validation set: (215629, 20)
+2025-12-06 15:34:31,250 - data.cleaning - INFO - Starting data cleaning process...
+2025-12-06 15:34:31,733 - data.cleaning - INFO - Removed 0 duplicate rows
+2025-12-06 15:34:31,784 - data.cleaning - INFO - Handling missing values...
+2025-12-06 15:34:31,920 - data.cleaning - WARNING - Column issue_d has 100.00% missing values. Consider dropping this column.
+2025-12-06 15:34:31,937 - data.cleaning - WARNING - Column desc has 91.17% missing values. Consider dropping this column.
+2025-12-06 15:34:31,937 - data.cleaning - INFO - Removing outliers...
+2025-12-06 15:34:32,018 - data.cleaning - INFO - Found 43864 outliers in revenue
+2025-12-06 15:34:32,170 - data.cleaning - INFO - Found 173735 outliers in is_debt_consolidation
+2025-12-06 15:34:32,222 - data.cleaning - INFO - Found 13262 outliers in issue_year
+2025-12-06 15:34:32,255 - data.cleaning - INFO - Validating data ranges...
+2025-12-06 15:34:32,258 - data.cleaning - INFO - Data cleaning completed. Final shape: (862515, 20)
+2025-12-06 15:34:32,271 - data.cleaning - INFO - Starting data cleaning process...
+2025-12-06 15:34:32,379 - data.cleaning - INFO - Removed 0 duplicate rows
+2025-12-06 15:34:32,391 - data.cleaning - INFO - Handling missing values...
+2025-12-06 15:34:32,426 - data.cleaning - WARNING - Column issue_d has 100.00% missing values. Consider dropping this column.
+2025-12-06 15:34:32,430 - data.cleaning - WARNING - Column desc has 91.17% missing values. Consider dropping this column.
+2025-12-06 15:34:32,430 - data.cleaning - INFO - Removing outliers...
+2025-12-06 15:34:32,456 - data.cleaning - INFO - Found 898 outliers in dti_n
+2025-12-06 15:34:32,484 - data.cleaning - INFO - Found 43254 outliers in is_debt_consolidation
+2025-12-06 15:34:32,495 - data.cleaning - INFO - Found 3370 outliers in issue_year
+2025-12-06 15:34:32,503 - data.cleaning - INFO - Validating data ranges...
+2025-12-06 15:34:32,503 - data.cleaning - INFO - Data cleaning completed. Final shape: (215629, 20)
+2025-12-06 15:34:33,552 - __main__ - ERROR - Model training failed with error: y contains previously unseen labels: 'UNKNOWN'
+2025-12-06 15:34:47,934 - __main__ - INFO - Starting baseline model training...
+2025-12-06 15:34:47,934 - __main__ - INFO - Loading training data from data/processed/train.csv
+2025-12-06 15:34:49,115 - __main__ - INFO - Loaded data with shape: (1078144, 21)
+2025-12-06 15:34:49,176 - __main__ - INFO - Features shape: (1078144, 20), Target shape: (1078144,)
+2025-12-06 15:34:49,248 - __main__ - INFO - Numeric features: 12
+2025-12-06 15:34:49,248 - __main__ - INFO - Categorical features: 8
+2025-12-06 15:34:49,259 - __main__ - INFO - Splitting data with test_size=0.2, random_state=42
+2025-12-06 15:34:49,644 - __main__ - INFO - Training set: (862515, 20), Validation set: (215629, 20)
+2025-12-06 15:34:49,644 - data.cleaning - INFO - Starting data cleaning process...
+2025-12-06 15:34:50,108 - data.cleaning - INFO - Removed 0 duplicate rows
+2025-12-06 15:34:50,158 - data.cleaning - INFO - Handling missing values...
+2025-12-06 15:34:50,293 - data.cleaning - WARNING - Column issue_d has 100.00% missing values. Consider dropping this column.
+2025-12-06 15:34:50,311 - data.cleaning - WARNING - Column desc has 91.17% missing values. Consider dropping this column.
+2025-12-06 15:34:50,311 - data.cleaning - INFO - Removing outliers...
+2025-12-06 15:34:50,393 - data.cleaning - INFO - Found 43864 outliers in revenue
+2025-12-06 15:34:50,544 - data.cleaning - INFO - Found 173735 outliers in is_debt_consolidation
+2025-12-06 15:34:50,590 - data.cleaning - INFO - Found 13262 outliers in issue_year
+2025-12-06 15:34:50,619 - data.cleaning - INFO - Validating data ranges...
+2025-12-06 15:34:50,622 - data.cleaning - INFO - Data cleaning completed. Final shape: (862515, 20)
+2025-12-06 15:34:50,636 - data.cleaning - INFO - Starting data cleaning process...
+2025-12-06 15:34:50,736 - data.cleaning - INFO - Removed 0 duplicate rows
+2025-12-06 15:34:50,749 - data.cleaning - INFO - Handling missing values...
+2025-12-06 15:34:50,782 - data.cleaning - WARNING - Column issue_d has 100.00% missing values. Consider dropping this column.
+2025-12-06 15:34:50,787 - data.cleaning - WARNING - Column desc has 91.17% missing values. Consider dropping this column.
+2025-12-06 15:34:50,787 - data.cleaning - INFO - Removing outliers...
+2025-12-06 15:34:50,813 - data.cleaning - INFO - Found 898 outliers in dti_n
+2025-12-06 15:34:50,845 - data.cleaning - INFO - Found 43254 outliers in is_debt_consolidation
+2025-12-06 15:34:50,857 - data.cleaning - INFO - Found 3370 outliers in issue_year
+2025-12-06 15:34:50,865 - data.cleaning - INFO - Validating data ranges...
+2025-12-06 15:34:50,865 - data.cleaning - INFO - Data cleaning completed. Final shape: (215629, 20)
+2025-12-06 15:34:51,902 - __main__ - ERROR - Model training failed with error: y contains previously unseen labels: 'UNKNOWN'
+2025-12-06 15:36:21,267 - __main__ - INFO - Starting baseline model training...
+2025-12-06 15:36:21,267 - __main__ - INFO - Loading training data from data/processed/train.csv
+2025-12-06 15:36:22,392 - __main__ - INFO - Loaded data with shape: (1078144, 21)
+2025-12-06 15:36:22,454 - __main__ - INFO - Features shape: (1078144, 20), Target shape: (1078144,)
+2025-12-06 15:36:22,513 - __main__ - INFO - Numeric features: 12
+2025-12-06 15:36:22,514 - __main__ - INFO - Categorical features: 8
+2025-12-06 15:36:22,525 - __main__ - INFO - Splitting data with test_size=0.2, random_state=42
+2025-12-06 15:36:22,892 - __main__ - INFO - Training set: (862515, 20), Validation set: (215629, 20)
+2025-12-06 15:36:22,892 - data.cleaning - INFO - Starting data cleaning process...
+2025-12-06 15:36:23,340 - data.cleaning - INFO - Removed 0 duplicate rows
+2025-12-06 15:36:23,389 - data.cleaning - INFO - Handling missing values...
+2025-12-06 15:36:23,521 - data.cleaning - WARNING - Column issue_d has 100.00% missing values. Consider dropping this column.
+2025-12-06 15:36:23,538 - data.cleaning - WARNING - Column desc has 91.17% missing values. Consider dropping this column.
+2025-12-06 15:36:23,538 - data.cleaning - INFO - Removing outliers...
+2025-12-06 15:36:23,616 - data.cleaning - INFO - Found 43864 outliers in revenue
+2025-12-06 15:36:23,759 - data.cleaning - INFO - Found 173735 outliers in is_debt_consolidation
+2025-12-06 15:36:23,802 - data.cleaning - INFO - Found 13262 outliers in issue_year
+2025-12-06 15:36:23,830 - data.cleaning - INFO - Validating data ranges...
+2025-12-06 15:36:23,833 - data.cleaning - INFO - Data cleaning completed. Final shape: (862515, 20)
+2025-12-06 15:36:23,846 - data.cleaning - INFO - Starting data cleaning process...
+2025-12-06 15:36:23,952 - data.cleaning - INFO - Removed 0 duplicate rows
+2025-12-06 15:36:23,964 - data.cleaning - INFO - Handling missing values...
+2025-12-06 15:36:23,999 - data.cleaning - WARNING - Column issue_d has 100.00% missing values. Consider dropping this column.
+2025-12-06 15:36:24,004 - data.cleaning - WARNING - Column desc has 91.17% missing values. Consider dropping this column.
+2025-12-06 15:36:24,004 - data.cleaning - INFO - Removing outliers...
+2025-12-06 15:36:24,026 - data.cleaning - INFO - Found 898 outliers in dti_n
+2025-12-06 15:36:24,052 - data.cleaning - INFO - Found 43254 outliers in is_debt_consolidation
+2025-12-06 15:36:24,064 - data.cleaning - INFO - Found 3370 outliers in issue_year
+2025-12-06 15:36:24,071 - data.cleaning - INFO - Validating data ranges...
+2025-12-06 15:36:24,071 - data.cleaning - INFO - Data cleaning completed. Final shape: (215629, 20)
+2025-12-06 15:36:25,077 - __main__ - ERROR - Model training failed with error: y contains previously unseen labels: 'UNKNOWN'
+2025-12-06 15:37:45,391 - __main__ - INFO - Starting baseline model training...
+2025-12-06 15:37:45,391 - __main__ - INFO - Loading training data from data/processed/train.csv
+2025-12-06 15:37:46,516 - __main__ - INFO - Loaded data with shape: (1078144, 21)
+2025-12-06 15:37:46,576 - __main__ - INFO - Features shape: (1078144, 20), Target shape: (1078144,)
+2025-12-06 15:37:46,636 - __main__ - INFO - Numeric features: 12
+2025-12-06 15:37:46,636 - __main__ - INFO - Categorical features: 8
+2025-12-06 15:37:46,647 - __main__ - INFO - Splitting data with test_size=0.2, random_state=42
+2025-12-06 15:37:47,011 - __main__ - INFO - Training set: (862515, 20), Validation set: (215629, 20)
+2025-12-06 15:37:47,012 - data.cleaning - INFO - Starting data cleaning process...
+2025-12-06 15:37:47,460 - data.cleaning - INFO - Removed 0 duplicate rows
+2025-12-06 15:37:47,509 - data.cleaning - INFO - Handling missing values...
+2025-12-06 15:37:47,638 - data.cleaning - WARNING - Column issue_d has 100.00% missing values. Consider dropping this column.
+2025-12-06 15:37:47,655 - data.cleaning - WARNING - Column desc has 91.17% missing values. Consider dropping this column.
+2025-12-06 15:37:47,656 - data.cleaning - INFO - Removing outliers...
+2025-12-06 15:37:47,731 - data.cleaning - INFO - Found 43864 outliers in revenue
+2025-12-06 15:37:47,879 - data.cleaning - INFO - Found 173735 outliers in is_debt_consolidation
+2025-12-06 15:37:47,922 - data.cleaning - INFO - Found 13262 outliers in issue_year
+2025-12-06 15:37:47,951 - data.cleaning - INFO - Validating data ranges...
+2025-12-06 15:37:47,954 - data.cleaning - INFO - Data cleaning completed. Final shape: (862515, 20)
+2025-12-06 15:37:47,966 - data.cleaning - INFO - Starting data cleaning process...
+2025-12-06 15:37:48,064 - data.cleaning - INFO - Removed 0 duplicate rows
+2025-12-06 15:37:48,076 - data.cleaning - INFO - Handling missing values...
+2025-12-06 15:37:48,110 - data.cleaning - WARNING - Column issue_d has 100.00% missing values. Consider dropping this column.
+2025-12-06 15:37:48,115 - data.cleaning - WARNING - Column desc has 91.17% missing values. Consider dropping this column.
+2025-12-06 15:37:48,115 - data.cleaning - INFO - Removing outliers...
+2025-12-06 15:37:48,138 - data.cleaning - INFO - Found 898 outliers in dti_n
+2025-12-06 15:37:48,166 - data.cleaning - INFO - Found 43254 outliers in is_debt_consolidation
+2025-12-06 15:37:48,177 - data.cleaning - INFO - Found 3370 outliers in issue_year
+2025-12-06 15:37:48,184 - data.cleaning - INFO - Validating data ranges...
+2025-12-06 15:37:48,185 - data.cleaning - INFO - Data cleaning completed. Final shape: (215629, 20)
+2025-12-06 15:37:49,158 - __main__ - ERROR - Model training failed with error: y contains previously unseen labels: 'UNKNOWN'
+2025-12-06 15:38:28,372 - __main__ - INFO - Starting baseline model training...
+2025-12-06 15:38:28,372 - __main__ - INFO - Loading training data from data/processed/train.csv
+2025-12-06 15:38:29,506 - __main__ - INFO - Loaded data with shape: (1078144, 21)
+2025-12-06 15:38:29,569 - __main__ - INFO - Features shape: (1078144, 20), Target shape: (1078144,)
+2025-12-06 15:38:29,629 - __main__ - INFO - Numeric features: 12
+2025-12-06 15:38:29,629 - __main__ - INFO - Categorical features: 8
+2025-12-06 15:38:29,641 - __main__ - INFO - Splitting data with test_size=0.2, random_state=42
+2025-12-06 15:38:30,004 - __main__ - INFO - Training set: (862515, 20), Validation set: (215629, 20)
+2025-12-06 15:38:30,004 - data.cleaning - INFO - Starting data cleaning process...
+2025-12-06 15:38:30,456 - data.cleaning - INFO - Removed 0 duplicate rows
+2025-12-06 15:38:30,504 - data.cleaning - INFO - Handling missing values...
+2025-12-06 15:38:30,634 - data.cleaning - WARNING - Column issue_d has 100.00% missing values. Consider dropping this column.
+2025-12-06 15:38:30,651 - data.cleaning - WARNING - Column desc has 91.17% missing values. Consider dropping this column.
+2025-12-06 15:38:30,651 - data.cleaning - INFO - Removing outliers...
+2025-12-06 15:38:30,728 - data.cleaning - INFO - Found 43864 outliers in revenue
+2025-12-06 15:38:30,878 - data.cleaning - INFO - Found 173735 outliers in is_debt_consolidation
+2025-12-06 15:38:30,922 - data.cleaning - INFO - Found 13262 outliers in issue_year
+2025-12-06 15:38:30,950 - data.cleaning - INFO - Validating data ranges...
+2025-12-06 15:38:30,953 - data.cleaning - INFO - Data cleaning completed. Final shape: (862515, 20)
+2025-12-06 15:38:30,966 - data.cleaning - INFO - Starting data cleaning process...
+2025-12-06 15:38:31,060 - data.cleaning - INFO - Removed 0 duplicate rows
+2025-12-06 15:38:31,073 - data.cleaning - INFO - Handling missing values...
+2025-12-06 15:38:31,107 - data.cleaning - WARNING - Column issue_d has 100.00% missing values. Consider dropping this column.
+2025-12-06 15:38:31,111 - data.cleaning - WARNING - Column desc has 91.17% missing values. Consider dropping this column.
+2025-12-06 15:38:31,111 - data.cleaning - INFO - Removing outliers...
+2025-12-06 15:38:31,134 - data.cleaning - INFO - Found 898 outliers in dti_n
+2025-12-06 15:38:31,163 - data.cleaning - INFO - Found 43254 outliers in is_debt_consolidation
+2025-12-06 15:38:31,175 - data.cleaning - INFO - Found 3370 outliers in issue_year
+2025-12-06 15:38:31,182 - data.cleaning - INFO - Validating data ranges...
+2025-12-06 15:38:31,183 - data.cleaning - INFO - Data cleaning completed. Final shape: (215629, 20)
+2025-12-06 15:38:32,576 - __main__ - ERROR - Model training failed with error: division by zero
+2025-12-06 15:40:13,118 - __main__ - INFO - Starting baseline model training...
+2025-12-06 15:40:13,118 - __main__ - INFO - Loading training data from data/processed/train.csv
+2025-12-06 15:40:14,252 - __main__ - INFO - Loaded data with shape: (1078144, 21)
+2025-12-06 15:40:14,314 - __main__ - INFO - Features shape: (1078144, 20), Target shape: (1078144,)
+2025-12-06 15:40:14,372 - __main__ - INFO - Numeric features: 12
+2025-12-06 15:40:14,373 - __main__ - INFO - Categorical features: 8
+2025-12-06 15:40:14,384 - __main__ - INFO - Splitting data with test_size=0.2, random_state=42
+2025-12-06 15:40:14,751 - __main__ - INFO - Training set: (862515, 20), Validation set: (215629, 20)
+2025-12-06 15:40:14,751 - data.cleaning - INFO - Starting data cleaning process...
+2025-12-06 15:40:15,186 - data.cleaning - INFO - Removed 0 duplicate rows
+2025-12-06 15:40:15,232 - data.cleaning - INFO - Handling missing values...
+2025-12-06 15:40:15,363 - data.cleaning - WARNING - Column issue_d has 100.00% missing values. Consider dropping this column.
+2025-12-06 15:40:15,380 - data.cleaning - WARNING - Column desc has 91.17% missing values. Consider dropping this column.
+2025-12-06 15:40:15,380 - data.cleaning - INFO - Removing outliers...
+2025-12-06 15:40:15,457 - data.cleaning - INFO - Found 43864 outliers in revenue
+2025-12-06 15:40:15,614 - data.cleaning - INFO - Found 173735 outliers in is_debt_consolidation
+2025-12-06 15:40:15,662 - data.cleaning - INFO - Found 13262 outliers in issue_year
+2025-12-06 15:40:15,691 - data.cleaning - INFO - Validating data ranges...
+2025-12-06 15:40:15,693 - data.cleaning - INFO - Data cleaning completed. Final shape: (862515, 20)
+2025-12-06 15:40:15,707 - data.cleaning - INFO - Starting data cleaning process...
+2025-12-06 15:40:15,802 - data.cleaning - INFO - Removed 0 duplicate rows
+2025-12-06 15:40:15,814 - data.cleaning - INFO - Handling missing values...
+2025-12-06 15:40:15,850 - data.cleaning - WARNING - Column issue_d has 100.00% missing values. Consider dropping this column.
+2025-12-06 15:40:15,855 - data.cleaning - WARNING - Column desc has 91.17% missing values. Consider dropping this column.
+2025-12-06 15:40:15,855 - data.cleaning - INFO - Removing outliers...
+2025-12-06 15:40:15,876 - data.cleaning - INFO - Found 898 outliers in dti_n
+2025-12-06 15:40:15,904 - data.cleaning - INFO - Found 43254 outliers in is_debt_consolidation
+2025-12-06 15:40:15,916 - data.cleaning - INFO - Found 3370 outliers in issue_year
+2025-12-06 15:40:15,923 - data.cleaning - INFO - Validating data ranges...
+2025-12-06 15:40:15,924 - data.cleaning - INFO - Data cleaning completed. Final shape: (215629, 20)
+2025-12-06 15:40:17,295 - __main__ - ERROR - Model training failed with error: division by zero
+2025-12-06 15:41:05,978 - __main__ - INFO - Starting baseline model training...
+2025-12-06 15:41:05,978 - __main__ - INFO - Loading training data from data/processed/train.csv
+2025-12-06 15:41:07,123 - __main__ - INFO - Loaded data with shape: (1078144, 21)
+2025-12-06 15:41:07,186 - __main__ - INFO - Features shape: (1078144, 20), Target shape: (1078144,)
+2025-12-06 15:41:07,247 - __main__ - INFO - Numeric features: 12
+2025-12-06 15:41:07,247 - __main__ - INFO - Categorical features: 8
+2025-12-06 15:41:07,258 - __main__ - INFO - Splitting data with test_size=0.2, random_state=42
+2025-12-06 15:41:07,633 - __main__ - INFO - Training set: (862515, 20), Validation set: (215629, 20)
+2025-12-06 15:41:07,633 - data.cleaning - INFO - Starting data cleaning process...
+2025-12-06 15:41:08,098 - data.cleaning - INFO - Removed 0 duplicate rows
+2025-12-06 15:41:08,144 - data.cleaning - INFO - Handling missing values...
+2025-12-06 15:41:08,273 - data.cleaning - WARNING - Column issue_d has 100.00% missing values. Consider dropping this column.
+2025-12-06 15:41:08,291 - data.cleaning - WARNING - Column desc has 91.17% missing values. Consider dropping this column.
+2025-12-06 15:41:08,291 - data.cleaning - INFO - Removing outliers...
+2025-12-06 15:41:08,371 - data.cleaning - INFO - Found 43864 outliers in revenue
+2025-12-06 15:41:08,526 - data.cleaning - INFO - Found 173735 outliers in is_debt_consolidation
+2025-12-06 15:41:08,572 - data.cleaning - INFO - Found 13262 outliers in issue_year
+2025-12-06 15:41:08,602 - data.cleaning - INFO - Validating data ranges...
+2025-12-06 15:41:08,605 - data.cleaning - INFO - Data cleaning completed. Final shape: (862515, 20)
+2025-12-06 15:41:08,617 - data.cleaning - INFO - Starting data cleaning process...
+2025-12-06 15:41:08,711 - data.cleaning - INFO - Removed 0 duplicate rows
+2025-12-06 15:41:08,723 - data.cleaning - INFO - Handling missing values...
+2025-12-06 15:41:08,757 - data.cleaning - WARNING - Column issue_d has 100.00% missing values. Consider dropping this column.
+2025-12-06 15:41:08,761 - data.cleaning - WARNING - Column desc has 91.17% missing values. Consider dropping this column.
+2025-12-06 15:41:08,762 - data.cleaning - INFO - Removing outliers...
+2025-12-06 15:41:08,784 - data.cleaning - INFO - Found 898 outliers in dti_n
+2025-12-06 15:41:08,811 - data.cleaning - INFO - Found 43254 outliers in is_debt_consolidation
+2025-12-06 15:41:08,823 - data.cleaning - INFO - Found 3370 outliers in issue_year
+2025-12-06 15:41:08,831 - data.cleaning - INFO - Validating data ranges...
+2025-12-06 15:41:08,832 - data.cleaning - INFO - Data cleaning completed. Final shape: (215629, 20)
+2025-12-06 15:41:10,202 - __main__ - WARNING - No positive samples in training data. Setting scale_pos_weight to 1.
+2025-12-06 15:41:10,202 - __main__ - INFO - Training XGBoost with params: {'random_state': 42, 'objective': 'binary:logistic', 'eval_metric': 'auc', 'max_depth': 6, 'learning_rate': 0.1, 'n_estimators': 100, 'scale_pos_weight': 1}
+2025-12-06 15:41:10,561 - __main__ - ERROR - Model training failed with error: DataFrame.dtypes for data must be int, float, bool or category. When categorical type is supplied, the experimental DMatrix parameter`enable_categorical` must be set to `True`.  Invalid columns:issue_d: datetime64[ns]
+2025-12-06 15:42:18,131 - __main__ - INFO - Starting baseline model training...
+2025-12-06 15:42:18,131 - __main__ - INFO - Loading training data from data/processed/train.csv
+2025-12-06 15:42:19,177 - __main__ - INFO - Loaded data with shape: (1078144, 20)
+2025-12-06 15:42:19,236 - __main__ - INFO - Features shape: (1078144, 19), Target shape: (1078144,)
+2025-12-06 15:42:19,290 - __main__ - INFO - Numeric features: 12
+2025-12-06 15:42:19,290 - __main__ - INFO - Categorical features: 7
+2025-12-06 15:42:19,301 - __main__ - INFO - Splitting data with test_size=0.2, random_state=42
+2025-12-06 15:42:19,656 - __main__ - INFO - Training set: (862515, 19), Validation set: (215629, 19)
+2025-12-06 15:42:19,656 - data.cleaning - INFO - Starting data cleaning process...
+2025-12-06 15:42:20,090 - data.cleaning - INFO - Removed 0 duplicate rows
+2025-12-06 15:42:20,098 - data.cleaning - INFO - Handling missing values...
+2025-12-06 15:42:20,247 - data.cleaning - WARNING - Column desc has 91.17% missing values. Consider dropping this column.
+2025-12-06 15:42:20,247 - data.cleaning - INFO - Removing outliers...
+2025-12-06 15:42:20,324 - data.cleaning - INFO - Found 43864 outliers in revenue
+2025-12-06 15:42:20,478 - data.cleaning - INFO - Found 173735 outliers in is_debt_consolidation
+2025-12-06 15:42:20,523 - data.cleaning - INFO - Found 13262 outliers in issue_year
+2025-12-06 15:42:20,553 - data.cleaning - INFO - Validating data ranges...
+2025-12-06 15:42:20,556 - data.cleaning - INFO - Data cleaning completed. Final shape: (862515, 19)
+2025-12-06 15:42:20,569 - data.cleaning - INFO - Starting data cleaning process...
+2025-12-06 15:42:20,667 - data.cleaning - INFO - Removed 0 duplicate rows
+2025-12-06 15:42:20,669 - data.cleaning - INFO - Handling missing values...
+2025-12-06 15:42:20,709 - data.cleaning - WARNING - Column desc has 91.17% missing values. Consider dropping this column.
+2025-12-06 15:42:20,709 - data.cleaning - INFO - Removing outliers...
+2025-12-06 15:42:20,732 - data.cleaning - INFO - Found 898 outliers in dti_n
+2025-12-06 15:42:20,759 - data.cleaning - INFO - Found 43254 outliers in is_debt_consolidation
+2025-12-06 15:42:20,771 - data.cleaning - INFO - Found 3370 outliers in issue_year
+2025-12-06 15:42:20,779 - data.cleaning - INFO - Validating data ranges...
+2025-12-06 15:42:20,780 - data.cleaning - INFO - Data cleaning completed. Final shape: (215629, 19)
+2025-12-06 15:42:22,163 - __main__ - WARNING - No positive samples in training data. Setting scale_pos_weight to 1.
+2025-12-06 15:42:22,164 - __main__ - INFO - Training XGBoost with params: {'random_state': 42, 'objective': 'binary:logistic', 'eval_metric': 'auc', 'max_depth': 6, 'learning_rate': 0.1, 'n_estimators': 100, 'scale_pos_weight': 1}
+2025-12-06 15:42:22,895 - __main__ - ERROR - Model training failed with error: [15:42:22] /workspace/src/objective/regression_obj.cu:119: Check failed: is_valid: base_score must be in (0,1) for the logistic loss.
+Stack trace:
+  [bt] (0) /home/ubuntu/.cache/pypoetry/virtualenvs/credit-scoring-v9HltUkd-py3.13/lib/python3.13/site-packages/xgboost/lib/libxgboost.so(+0x2bdf8c) [0x7e4f0d4bdf8c]
+  [bt] (1) /home/ubuntu/.cache/pypoetry/virtualenvs/credit-scoring-v9HltUkd-py3.13/lib/python3.13/site-packages/xgboost/lib/libxgboost.so(+0x1077654) [0x7e4f0e277654]
+  [bt] (2) /home/ubuntu/.cache/pypoetry/virtualenvs/credit-scoring-v9HltUkd-py3.13/lib/python3.13/site-packages/xgboost/lib/libxgboost.so(+0x1077c75) [0x7e4f0e277c75]
+  [bt] (3) /home/ubuntu/.cache/pypoetry/virtualenvs/credit-scoring-v9HltUkd-py3.13/lib/python3.13/site-packages/xgboost/lib/libxgboost.so(+0x6d1ab9) [0x7e4f0d8d1ab9]
+  [bt] (4) /home/ubuntu/.cache/pypoetry/virtualenvs/credit-scoring-v9HltUkd-py3.13/lib/python3.13/site-packages/xgboost/lib/libxgboost.so(+0x6f4db7) [0x7e4f0d8f4db7]
+  [bt] (5) /home/ubuntu/.cache/pypoetry/virtualenvs/credit-scoring-v9HltUkd-py3.13/lib/python3.13/site-packages/xgboost/lib/libxgboost.so(XGBoosterUpdateOneIter+0x77) [0x7e4f0d3caa67]
+  [bt] (6) /home/linuxbrew/.linuxbrew/lib/libffi.so.8(+0x9056) [0x7e4f6d44a056]
+  [bt] (7) /home/linuxbrew/.linuxbrew/lib/libffi.so.8(+0x7b46) [0x7e4f6d448b46]
+  [bt] (8) /home/linuxbrew/.linuxbrew/lib/libffi.so.8(ffi_call+0x123) [0x7e4f6d449413]
+
+
+2025-12-06 15:43:09,023 - __main__ - INFO - Starting baseline model training...
+2025-12-06 15:43:09,023 - __main__ - INFO - Loading training data from data/processed/train.csv
+2025-12-06 15:43:10,080 - __main__ - INFO - Loaded data with shape: (1078144, 20)
+2025-12-06 15:43:10,140 - __main__ - INFO - Features shape: (1078144, 19), Target shape: (1078144,)
+2025-12-06 15:43:10,194 - __main__ - INFO - Numeric features: 12
+2025-12-06 15:43:10,194 - __main__ - INFO - Categorical features: 7
+2025-12-06 15:43:10,205 - __main__ - INFO - Splitting data with test_size=0.2, random_state=42
+2025-12-06 15:43:10,555 - __main__ - INFO - Training set: (862515, 19), Validation set: (215629, 19)
+2025-12-06 15:43:10,555 - data.cleaning - INFO - Starting data cleaning process...
+2025-12-06 15:43:10,976 - data.cleaning - INFO - Removed 0 duplicate rows
+2025-12-06 15:43:10,985 - data.cleaning - INFO - Handling missing values...
+2025-12-06 15:43:11,132 - data.cleaning - WARNING - Column desc has 91.17% missing values. Consider dropping this column.
+2025-12-06 15:43:11,132 - data.cleaning - INFO - Removing outliers...
+2025-12-06 15:43:11,210 - data.cleaning - INFO - Found 43864 outliers in revenue
+2025-12-06 15:43:11,356 - data.cleaning - INFO - Found 173735 outliers in is_debt_consolidation
+2025-12-06 15:43:11,400 - data.cleaning - INFO - Found 13262 outliers in issue_year
+2025-12-06 15:43:11,428 - data.cleaning - INFO - Validating data ranges...
+2025-12-06 15:43:11,431 - data.cleaning - INFO - Data cleaning completed. Final shape: (862515, 19)
+2025-12-06 15:43:11,442 - data.cleaning - INFO - Starting data cleaning process...
+2025-12-06 15:43:11,533 - data.cleaning - INFO - Removed 0 duplicate rows
+2025-12-06 15:43:11,535 - data.cleaning - INFO - Handling missing values...
+2025-12-06 15:43:11,575 - data.cleaning - WARNING - Column desc has 91.17% missing values. Consider dropping this column.
+2025-12-06 15:43:11,575 - data.cleaning - INFO - Removing outliers...
+2025-12-06 15:43:11,597 - data.cleaning - INFO - Found 898 outliers in dti_n
+2025-12-06 15:43:11,624 - data.cleaning - INFO - Found 43254 outliers in is_debt_consolidation
+2025-12-06 15:43:11,636 - data.cleaning - INFO - Found 3370 outliers in issue_year
+2025-12-06 15:43:11,643 - data.cleaning - INFO - Validating data ranges...
+2025-12-06 15:43:11,643 - data.cleaning - INFO - Data cleaning completed. Final shape: (215629, 19)
+2025-12-06 15:43:13,002 - __main__ - WARNING - No positive samples in training data. Setting scale_pos_weight to 1.
+2025-12-06 15:43:13,002 - __main__ - INFO - Training XGBoost with params: {'random_state': 42, 'objective': 'binary:logistic', 'eval_metric': 'auc', 'max_depth': 6, 'learning_rate': 0.1, 'n_estimators': 100, 'scale_pos_weight': 1}
+2025-12-06 15:43:13,698 - __main__ - ERROR - Model training failed with error: [15:43:13] /workspace/src/objective/regression_obj.cu:119: Check failed: is_valid: base_score must be in (0,1) for the logistic loss.
+Stack trace:
+  [bt] (0) /home/ubuntu/.cache/pypoetry/virtualenvs/credit-scoring-v9HltUkd-py3.13/lib/python3.13/site-packages/xgboost/lib/libxgboost.so(+0x2bdf8c) [0x7ddf576bdf8c]
+  [bt] (1) /home/ubuntu/.cache/pypoetry/virtualenvs/credit-scoring-v9HltUkd-py3.13/lib/python3.13/site-packages/xgboost/lib/libxgboost.so(+0x1077654) [0x7ddf58477654]
+  [bt] (2) /home/ubuntu/.cache/pypoetry/virtualenvs/credit-scoring-v9HltUkd-py3.13/lib/python3.13/site-packages/xgboost/lib/libxgboost.so(+0x1077c75) [0x7ddf58477c75]
+  [bt] (3) /home/ubuntu/.cache/pypoetry/virtualenvs/credit-scoring-v9HltUkd-py3.13/lib/python3.13/site-packages/xgboost/lib/libxgboost.so(+0x6d1ab9) [0x7ddf57ad1ab9]
+  [bt] (4) /home/ubuntu/.cache/pypoetry/virtualenvs/credit-scoring-v9HltUkd-py3.13/lib/python3.13/site-packages/xgboost/lib/libxgboost.so(+0x6f4db7) [0x7ddf57af4db7]
+  [bt] (5) /home/ubuntu/.cache/pypoetry/virtualenvs/credit-scoring-v9HltUkd-py3.13/lib/python3.13/site-packages/xgboost/lib/libxgboost.so(XGBoosterUpdateOneIter+0x77) [0x7ddf575caa67]
+  [bt] (6) /home/linuxbrew/.linuxbrew/lib/libffi.so.8(+0x9056) [0x7ddfb760b056]
+  [bt] (7) /home/linuxbrew/.linuxbrew/lib/libffi.so.8(+0x7b46) [0x7ddfb7609b46]
+  [bt] (8) /home/linuxbrew/.linuxbrew/lib/libffi.so.8(ffi_call+0x123) [0x7ddfb760a413]
+
+
+2025-12-06 15:45:16,543 - __main__ - INFO - Starting baseline model training...
+2025-12-06 15:45:16,543 - __main__ - INFO - Loading training data from data/processed/train.csv
+2025-12-06 15:45:17,610 - __main__ - INFO - Loaded data with shape: (1078144, 20)
+2025-12-06 15:45:17,668 - __main__ - INFO - Features shape: (1078144, 19), Target shape: (1078144,)
+2025-12-06 15:45:17,724 - __main__ - INFO - Numeric features: 12
+2025-12-06 15:45:17,724 - __main__ - INFO - Categorical features: 7
+2025-12-06 15:45:17,734 - __main__ - INFO - Splitting data with test_size=0.2, random_state=42
+2025-12-06 15:45:18,094 - __main__ - INFO - Training set: (862515, 19), Validation set: (215629, 19)
+2025-12-06 15:45:18,094 - data.cleaning - INFO - Starting data cleaning process...
+2025-12-06 15:45:18,520 - data.cleaning - INFO - Removed 0 duplicate rows
+2025-12-06 15:45:18,528 - data.cleaning - INFO - Handling missing values...
+2025-12-06 15:45:18,674 - data.cleaning - WARNING - Column desc has 91.17% missing values. Consider dropping this column.
+2025-12-06 15:45:18,674 - data.cleaning - INFO - Removing outliers...
+2025-12-06 15:45:18,752 - data.cleaning - INFO - Found 43864 outliers in revenue
+2025-12-06 15:45:18,896 - data.cleaning - INFO - Found 173735 outliers in is_debt_consolidation
+2025-12-06 15:45:18,941 - data.cleaning - INFO - Found 13262 outliers in issue_year
+2025-12-06 15:45:18,969 - data.cleaning - INFO - Validating data ranges...
+2025-12-06 15:45:18,972 - data.cleaning - INFO - Data cleaning completed. Final shape: (862515, 19)
+2025-12-06 15:45:18,984 - data.cleaning - INFO - Starting data cleaning process...
+2025-12-06 15:45:19,074 - data.cleaning - INFO - Removed 0 duplicate rows
+2025-12-06 15:45:19,076 - data.cleaning - INFO - Handling missing values...
+2025-12-06 15:45:19,116 - data.cleaning - WARNING - Column desc has 91.17% missing values. Consider dropping this column.
+2025-12-06 15:45:19,116 - data.cleaning - INFO - Removing outliers...
+2025-12-06 15:45:19,139 - data.cleaning - INFO - Found 898 outliers in dti_n
+2025-12-06 15:45:19,169 - data.cleaning - INFO - Found 43254 outliers in is_debt_consolidation
+2025-12-06 15:45:19,181 - data.cleaning - INFO - Found 3370 outliers in issue_year
+2025-12-06 15:45:19,187 - data.cleaning - INFO - Validating data ranges...
+2025-12-06 15:45:19,188 - data.cleaning - INFO - Data cleaning completed. Final shape: (215629, 19)
+2025-12-06 15:45:20,588 - __main__ - WARNING - No positive samples in training data. Setting scale_pos_weight to 1.
+2025-12-06 15:45:20,588 - __main__ - INFO - Training XGBoost with params: {'random_state': 42, 'objective': 'binary:logistic', 'eval_metric': 'auc', 'max_depth': 6, 'learning_rate': 0.1, 'n_estimators': 100, 'scale_pos_weight': 1}
+2025-12-06 15:45:21,307 - __main__ - ERROR - Model training failed with error: [15:45:21] /workspace/src/objective/regression_obj.cu:119: Check failed: is_valid: base_score must be in (0,1) for the logistic loss.
+Stack trace:
+  [bt] (0) /home/ubuntu/.cache/pypoetry/virtualenvs/credit-scoring-v9HltUkd-py3.13/lib/python3.13/site-packages/xgboost/lib/libxgboost.so(+0x2bdf8c) [0x7367c8ebdf8c]
+  [bt] (1) /home/ubuntu/.cache/pypoetry/virtualenvs/credit-scoring-v9HltUkd-py3.13/lib/python3.13/site-packages/xgboost/lib/libxgboost.so(+0x1077654) [0x7367c9c77654]
+  [bt] (2) /home/ubuntu/.cache/pypoetry/virtualenvs/credit-scoring-v9HltUkd-py3.13/lib/python3.13/site-packages/xgboost/lib/libxgboost.so(+0x1077c75) [0x7367c9c77c75]
+  [bt] (3) /home/ubuntu/.cache/pypoetry/virtualenvs/credit-scoring-v9HltUkd-py3.13/lib/python3.13/site-packages/xgboost/lib/libxgboost.so(+0x6d1ab9) [0x7367c92d1ab9]
+  [bt] (4) /home/ubuntu/.cache/pypoetry/virtualenvs/credit-scoring-v9HltUkd-py3.13/lib/python3.13/site-packages/xgboost/lib/libxgboost.so(+0x6f4db7) [0x7367c92f4db7]
+  [bt] (5) /home/ubuntu/.cache/pypoetry/virtualenvs/credit-scoring-v9HltUkd-py3.13/lib/python3.13/site-packages/xgboost/lib/libxgboost.so(XGBoosterUpdateOneIter+0x77) [0x7367c8dcaa67]
+  [bt] (6) /home/linuxbrew/.linuxbrew/lib/libffi.so.8(+0x9056) [0x736828e00056]
+  [bt] (7) /home/linuxbrew/.linuxbrew/lib/libffi.so.8(+0x7b46) [0x736828dfeb46]
+  [bt] (8) /home/linuxbrew/.linuxbrew/lib/libffi.so.8(ffi_call+0x123) [0x736828dff413]
+
+
+2025-12-06 15:47:36,799 - __main__ - INFO - Starting baseline model training...
+2025-12-06 15:47:36,800 - __main__ - INFO - Loading training data from data/processed/train.csv
+2025-12-06 15:47:37,857 - __main__ - INFO - Loaded data with shape: (1078144, 20)
+2025-12-06 15:47:37,919 - __main__ - INFO - Features shape: (1078144, 19), Target shape: (1078144,)
+2025-12-06 15:47:37,976 - __main__ - INFO - Numeric features: 12
+2025-12-06 15:47:37,976 - __main__ - INFO - Categorical features: 7
+2025-12-06 15:47:37,988 - __main__ - INFO - Splitting data with test_size=0.2, random_state=42
+2025-12-06 15:47:38,373 - __main__ - INFO - Training set: (862515, 19), Validation set: (215629, 19)
+2025-12-06 15:47:38,373 - data.cleaning - INFO - Starting data cleaning process...
+2025-12-06 15:47:38,800 - data.cleaning - INFO - Removed 0 duplicate rows
+2025-12-06 15:47:38,807 - data.cleaning - INFO - Handling missing values...
+2025-12-06 15:47:38,951 - data.cleaning - WARNING - Column desc has 91.19% missing values. Consider dropping this column.
+2025-12-06 15:47:38,951 - data.cleaning - INFO - Removing outliers...
+2025-12-06 15:47:39,050 - data.cleaning - INFO - Found 3483 outliers in dti_n
+2025-12-06 15:47:39,168 - data.cleaning - INFO - Found 173390 outliers in is_debt_consolidation
+2025-12-06 15:47:39,215 - data.cleaning - INFO - Found 13315 outliers in issue_year
+2025-12-06 15:47:39,242 - data.cleaning - INFO - Validating data ranges...
+2025-12-06 15:47:39,245 - data.cleaning - INFO - Data cleaning completed. Final shape: (862515, 19)
+2025-12-06 15:47:39,256 - data.cleaning - INFO - Starting data cleaning process...
+2025-12-06 15:47:39,347 - data.cleaning - INFO - Removed 0 duplicate rows
+2025-12-06 15:47:39,349 - data.cleaning - INFO - Handling missing values...
+2025-12-06 15:47:39,387 - data.cleaning - WARNING - Column desc has 91.06% missing values. Consider dropping this column.
+2025-12-06 15:47:39,387 - data.cleaning - INFO - Removing outliers...
+2025-12-06 15:47:39,439 - data.cleaning - INFO - Found 43621 outliers in is_debt_consolidation
+2025-12-06 15:47:39,450 - data.cleaning - INFO - Found 3384 outliers in issue_year
+2025-12-06 15:47:39,456 - data.cleaning - INFO - Validating data ranges...
+2025-12-06 15:47:39,457 - data.cleaning - INFO - Data cleaning completed. Final shape: (215629, 19)
+2025-12-06 15:47:40,855 - __main__ - INFO - Training XGBoost with params: {'random_state': 42, 'objective': 'binary:logistic', 'eval_metric': 'auc', 'max_depth': 6, 'learning_rate': 0.1, 'n_estimators': 100, 'scale_pos_weight': 4.0053389353466535}
+2025-12-06 15:47:49,374 - __main__ - INFO - XGBoost training completed
+2025-12-06 15:47:49,382 - __main__ - INFO - Evaluating model performance...
+2025-12-06 15:47:55,498 - __main__ - INFO - xgboost - Accuracy: 0.6236, Precision: 0.2955, Recall: 0.6385, F1: 0.4040, AUC: 0.6813
+2025-12-06 15:47:55,498 - __main__ - INFO - xgboost - CV AUC: 0.6767 (+/- 0.0043)
+2025-12-06 15:47:55,591 - __main__ - INFO - Baseline model training completed successfully!
+2025-12-06 15:52:19,614 - __main__ - INFO - Starting baseline model training...
+2025-12-06 15:52:19,753 - urllib3.connectionpool - WARNING - Retrying (Retry(total=6, connect=7, read=6, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/create
+2025-12-06 15:52:24,225 - urllib3.connectionpool - WARNING - Retrying (Retry(total=5, connect=7, read=5, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/create
+2025-12-06 15:52:32,748 - urllib3.connectionpool - WARNING - Retrying (Retry(total=4, connect=7, read=4, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/create
+2025-12-06 15:52:49,033 - urllib3.connectionpool - WARNING - Retrying (Retry(total=3, connect=7, read=3, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/create
+2025-12-06 15:53:21,995 - urllib3.connectionpool - WARNING - Retrying (Retry(total=2, connect=7, read=2, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/create
+2025-12-06 15:54:26,353 - urllib3.connectionpool - WARNING - Retrying (Retry(total=1, connect=7, read=1, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/create
+2025-12-06 15:56:26,355 - urllib3.connectionpool - WARNING - Retrying (Retry(total=0, connect=7, read=0, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/create
+2025-12-06 15:56:26,364 - urllib3.connectionpool - WARNING - Retrying (Retry(total=6, connect=7, read=6, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 15:56:31,223 - urllib3.connectionpool - WARNING - Retrying (Retry(total=5, connect=7, read=5, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 15:56:39,937 - urllib3.connectionpool - WARNING - Retrying (Retry(total=4, connect=7, read=4, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 15:56:56,529 - urllib3.connectionpool - WARNING - Retrying (Retry(total=3, connect=7, read=3, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 15:57:29,122 - urllib3.connectionpool - WARNING - Retrying (Retry(total=2, connect=7, read=2, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 15:58:33,308 - urllib3.connectionpool - WARNING - Retrying (Retry(total=1, connect=7, read=1, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 16:00:33,309 - urllib3.connectionpool - WARNING - Retrying (Retry(total=0, connect=7, read=0, redirect=7, status=7)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models
+2025-12-06 16:00:33,312 - __main__ - ERROR - Model training failed with error: API request to http://localhost:5000/api/2.0/mlflow/experiments/get-by-name failed with exception HTTPConnectionPool(host='localhost', port=5000): Max retries exceeded with url: /api/2.0/mlflow/experiments/get-by-name?experiment_name=Credit_Scoring_Baseline_Models (Caused by ProtocolError('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer')))
+2025-12-06 16:05:21,979 - __main__ - INFO - Starting baseline model training...
+2025-12-06 16:05:21,980 - __main__ - ERROR - Model training failed with error: name 'mlflow' is not defined
+2025-12-06 16:06:27,957 - __main__ - ERROR - Model training failed with error: 'Namespace' object has no attribute 'mlflow_tracking_uri'
+2025-12-06 16:06:53,827 - __main__ - INFO - Starting baseline model training...
+2025-12-06 16:06:53,827 - __main__ - INFO - Loading training data from data/processed/train.csv
+2025-12-06 16:06:54,875 - __main__ - INFO - Loaded data with shape: (1078144, 20)
+2025-12-06 16:06:54,935 - __main__ - INFO - Features shape: (1078144, 19), Target shape: (1078144,)
+2025-12-06 16:06:54,994 - __main__ - INFO - Numeric features: 12
+2025-12-06 16:06:54,994 - __main__ - INFO - Categorical features: 7
+2025-12-06 16:06:55,004 - __main__ - INFO - Splitting data with test_size=0.2, random_state=42
+2025-12-06 16:06:55,364 - __main__ - INFO - Training set: (862515, 19), Validation set: (215629, 19)
+2025-12-06 16:06:55,364 - data.cleaning - INFO - Starting data cleaning process...
+2025-12-06 16:06:55,780 - data.cleaning - INFO - Removed 0 duplicate rows
+2025-12-06 16:06:55,787 - data.cleaning - INFO - Handling missing values...
+2025-12-06 16:06:55,934 - data.cleaning - WARNING - Column desc has 91.19% missing values. Consider dropping this column.
+2025-12-06 16:06:55,934 - data.cleaning - INFO - Removing outliers...
+2025-12-06 16:06:56,038 - data.cleaning - INFO - Found 3483 outliers in dti_n
+2025-12-06 16:06:56,157 - data.cleaning - INFO - Found 173390 outliers in is_debt_consolidation
+2025-12-06 16:06:56,203 - data.cleaning - INFO - Found 13315 outliers in issue_year
+2025-12-06 16:06:56,232 - data.cleaning - INFO - Validating data ranges...
+2025-12-06 16:06:56,235 - data.cleaning - INFO - Data cleaning completed. Final shape: (862515, 19)
+2025-12-06 16:06:56,247 - data.cleaning - INFO - Starting data cleaning process...
+2025-12-06 16:06:56,334 - data.cleaning - INFO - Removed 0 duplicate rows
+2025-12-06 16:06:56,336 - data.cleaning - INFO - Handling missing values...
+2025-12-06 16:06:56,374 - data.cleaning - WARNING - Column desc has 91.06% missing values. Consider dropping this column.
+2025-12-06 16:06:56,374 - data.cleaning - INFO - Removing outliers...
+2025-12-06 16:06:56,423 - data.cleaning - INFO - Found 43621 outliers in is_debt_consolidation
+2025-12-06 16:06:56,435 - data.cleaning - INFO - Found 3384 outliers in issue_year
+2025-12-06 16:06:56,441 - data.cleaning - INFO - Validating data ranges...
+2025-12-06 16:06:56,442 - data.cleaning - INFO - Data cleaning completed. Final shape: (215629, 19)
+2025-12-06 16:06:57,842 - __main__ - INFO - Training XGBoost with params: {'random_state': 42, 'objective': 'binary:logistic', 'eval_metric': 'auc', 'max_depth': 6, 'learning_rate': 0.1, 'n_estimators': 100, 'scale_pos_weight': 4.0053389353466535}
+2025-12-06 16:07:08,393 - __main__ - INFO - XGBoost training completed
+2025-12-06 16:07:08,396 - __main__ - INFO - Evaluating model performance...
+2025-12-06 16:07:08,614 - __main__ - INFO - xgboost - Accuracy: 0.6236, Precision: 0.2955, Recall: 0.6385, F1: 0.4040, AUC: 0.6813
+2025-12-06 16:07:12,070 - __main__ - INFO - xgboost - CV AUC: 0.6767 (+/- 0.0043)
+2025-12-06 16:07:12,151 - __main__ - INFO - Baseline model training completed successfully!
+2025-12-06 16:09:02,151 - __main__ - INFO - Starting baseline model training...
+2025-12-06 16:09:02,151 - __main__ - INFO - Loading training data from data/processed/train.csv
+2025-12-06 16:09:03,216 - __main__ - INFO - Loaded data with shape: (1078144, 20)
+2025-12-06 16:09:03,275 - __main__ - INFO - Features shape: (1078144, 19), Target shape: (1078144,)
+2025-12-06 16:09:03,332 - __main__ - INFO - Numeric features: 12
+2025-12-06 16:09:03,332 - __main__ - INFO - Categorical features: 7
+2025-12-06 16:09:03,342 - __main__ - INFO - Splitting data with test_size=0.2, random_state=42
+2025-12-06 16:09:03,710 - __main__ - INFO - Training set: (862515, 19), Validation set: (215629, 19)
+2025-12-06 16:09:03,711 - data.cleaning - INFO - Starting data cleaning process...
+2025-12-06 16:09:04,142 - data.cleaning - INFO - Removed 0 duplicate rows
+2025-12-06 16:09:04,151 - data.cleaning - INFO - Handling missing values...
+2025-12-06 16:09:04,299 - data.cleaning - WARNING - Column desc has 91.19% missing values. Consider dropping this column.
+2025-12-06 16:09:04,299 - data.cleaning - INFO - Removing outliers...
+2025-12-06 16:09:04,402 - data.cleaning - INFO - Found 3483 outliers in dti_n
+2025-12-06 16:09:04,523 - data.cleaning - INFO - Found 173390 outliers in is_debt_consolidation
+2025-12-06 16:09:04,569 - data.cleaning - INFO - Found 13315 outliers in issue_year
+2025-12-06 16:09:04,598 - data.cleaning - INFO - Validating data ranges...
+2025-12-06 16:09:04,601 - data.cleaning - INFO - Data cleaning completed. Final shape: (862515, 19)
+2025-12-06 16:09:04,613 - data.cleaning - INFO - Starting data cleaning process...
+2025-12-06 16:09:04,702 - data.cleaning - INFO - Removed 0 duplicate rows
+2025-12-06 16:09:04,704 - data.cleaning - INFO - Handling missing values...
+2025-12-06 16:09:04,742 - data.cleaning - WARNING - Column desc has 91.06% missing values. Consider dropping this column.
+2025-12-06 16:09:04,742 - data.cleaning - INFO - Removing outliers...
+2025-12-06 16:09:04,792 - data.cleaning - INFO - Found 43621 outliers in is_debt_consolidation
+2025-12-06 16:09:04,804 - data.cleaning - INFO - Found 3384 outliers in issue_year
+2025-12-06 16:09:04,811 - data.cleaning - INFO - Validating data ranges...
+2025-12-06 16:09:04,812 - data.cleaning - INFO - Data cleaning completed. Final shape: (215629, 19)
+2025-12-06 16:09:06,195 - __main__ - INFO - Training XGBoost with params: {'random_state': 42, 'objective': 'binary:logistic', 'eval_metric': 'auc', 'max_depth': 6, 'learning_rate': 0.1, 'n_estimators': 100, 'scale_pos_weight': 4.0053389353466535}
+2025-12-06 16:09:17,019 - __main__ - INFO - XGBoost training completed
+2025-12-06 16:09:17,019 - __main__ - INFO - Evaluating model performance...
+2025-12-06 16:09:17,219 - __main__ - INFO - xgboost - Accuracy: 0.6236, Precision: 0.2955, Recall: 0.6385, F1: 0.4040, AUC: 0.6813
+2025-12-06 16:09:24,251 - __main__ - INFO - xgboost - CV AUC: 0.6767 (+/- 0.0043)
+2025-12-06 16:09:24,330 - __main__ - INFO - Baseline model training completed successfully!

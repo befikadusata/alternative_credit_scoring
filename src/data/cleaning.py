@@ -7,6 +7,7 @@ handling missing values, and performing data quality checks.
 
 import logging
 import re
+from typing import Optional, List
 
 import numpy as np
 import pandas as pd
@@ -25,16 +26,19 @@ class DataCleaner:
         self.scalers = {}
         self.logger = logging.getLogger(__name__)
 
-    def clean_loan_data(self, df: pd.DataFrame) -> pd.DataFrame:
+    def clean_loan_data(self, df: pd.DataFrame, exclude_columns: Optional[List[str]] = None) -> pd.DataFrame:
         """
         Apply comprehensive cleaning to loan data.
 
         Args:
             df: Raw loan data DataFrame
+            exclude_columns: Optional list of columns to exclude from numerical processing (outlier removal, range validation)
 
         Returns:
             Cleaned DataFrame
         """
+        if exclude_columns is None:
+            exclude_columns = []
         self.logger.info("Starting data cleaning process...")
 
         df = df.copy()
@@ -51,10 +55,10 @@ class DataCleaner:
         df = self._handle_missing_values(df)
 
         # Remove outliers
-        df = self._remove_outliers(df)
+        df = self._remove_outliers(df, exclude_columns)
 
         # Validate data ranges
-        df = self._validate_data_ranges(df)
+        df = self._validate_data_ranges(df, exclude_columns)
 
         self.logger.info(f"Data cleaning completed. Final shape: {df.shape}")
 
@@ -62,8 +66,8 @@ class DataCleaner:
 
     def _fix_data_types(self, df: pd.DataFrame) -> pd.DataFrame:
         """Fix incorrect data types for specific columns."""
-        # Convert percentage fields to numeric
-        percentage_cols = [
+        # Convert fields to numeric
+        numeric_cols_to_process = [
             "int_rate",
             "annual_inc",
             "dti",
@@ -73,24 +77,27 @@ class DataCleaner:
             "installment",
         ]
 
-        for col in percentage_cols:
+        for col in numeric_cols_to_process:
             if col in df.columns:
-                # Remove percentage signs and convert to float
+                # Remove percentage signs if present and convert to float
                 if df[col].dtype == "object":
                     df[col] = df[col].astype(str).str.replace("%", "", regex=False)
                     # Handle special cases like '10+ years' for employment length
                     df[col] = df[col].apply(self._convert_employment_length)
 
         # Convert to numeric, coercing errors to NaN
-        for col in percentage_cols:
+        for col in numeric_cols_to_process:
             if col in df.columns:
                 df[col] = pd.to_numeric(df[col], errors="coerce")
+                # Ensure the column is float64 even if all values are integers
+                df[col] = df[col].astype("float64")
 
         # Convert issue_d to datetime if it exists
         if "issue_d" in df.columns:
             df["issue_d"] = pd.to_datetime(
                 df["issue_d"], format="%b-%Y", errors="coerce"
             )
+
 
         return df
 
@@ -100,14 +107,15 @@ class DataCleaner:
             return np.nan
 
         if isinstance(value, str):
-            # Handle different employment length formats
-            if "year" in value.lower():
+            # Handle specific cases first
+            if "< 1 year" in value.lower() or "n/a" in value.lower():
+                return 0.0
+            # Handle other employment length formats
+            elif "year" in value.lower():
                 # Extract numeric value from strings like '10+ years' or '2 years'
                 numbers = re.findall(r"\d+", value)
                 if numbers:
                     return float(numbers[0])
-            elif "n/a" in value.lower() or "< 1 year" in value.lower():
-                return 0.0
 
         return value
 
@@ -147,14 +155,16 @@ class DataCleaner:
 
         return df
 
-    def _remove_outliers(self, df: pd.DataFrame) -> pd.DataFrame:
+    def _remove_outliers(self, df: pd.DataFrame, exclude_columns: Optional[List[str]] = None) -> pd.DataFrame:
         """Remove outliers using IQR method for numerical columns."""
+        if exclude_columns is None:
+            exclude_columns = []
         self.logger.info("Removing outliers...")
 
         numerical_cols = df.select_dtypes(include=[np.number]).columns
 
         for col in numerical_cols:
-            if col in df.columns:
+            if col in df.columns and col not in exclude_columns:
                 Q1 = df[col].quantile(0.25)
                 Q3 = df[col].quantile(0.75)
                 IQR = Q3 - Q1
@@ -175,8 +185,10 @@ class DataCleaner:
 
         return df
 
-    def _validate_data_ranges(self, df: pd.DataFrame) -> pd.DataFrame:
+    def _validate_data_ranges(self, df: pd.DataFrame, exclude_columns: Optional[List[str]] = None) -> pd.DataFrame:
         """Validate that data falls within expected ranges."""
+        if exclude_columns is None:
+            exclude_columns = []
         self.logger.info("Validating data ranges...")
 
         # Example validation for common credit data fields
@@ -188,7 +200,7 @@ class DataCleaner:
         }
 
         for col, (min_val, max_val) in valid_ranges.items():
-            if col in df.columns:
+            if col in df.columns and col not in exclude_columns:
                 # Identify out-of-range values
                 out_of_range = ((df[col] < min_val) | (df[col] > max_val)) & (
                     df[col].notna()
@@ -232,12 +244,12 @@ class DataCleaner:
                     continue
             else:
                 # Transform using existing encoder
-                # Handle unknown categories by assigning them a default value
-                unique_values = set(self.label_encoders[col].classes_)
-                df[col] = df[col].apply(
-                    lambda x: x if str(x) in unique_values else "UNKNOWN"
-                )
-                df[col] = self.label_encoders[col].transform(df[col].astype(str))
+                # Handle unknown categories by assigning a numerical placeholder (-1)
+                # This ensures that all columns are numerical after encoding
+                known_classes = set(self.label_encoders[col].classes_)
+                # Use a temporary mapping to assign -1 to unseen categories
+                mapping_dict = {cls: idx for idx, cls in enumerate(self.label_encoders[col].classes_)}
+                df[col] = df[col].astype(str).map(mapping_dict).fillna(-1).astype(int)
 
         return df
 
