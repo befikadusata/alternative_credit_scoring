@@ -342,7 +342,6 @@ def main(
     joblib.dump(cleaner, cleaner_path)
     # mlflow.log_artifact(cleaner_path, "preprocessor")
 
-
     # Initialize and train model based on type
     if model_type == "logistic_regression":
         model = train_logistic_regression(X_train, y_train, X_val, y_val)

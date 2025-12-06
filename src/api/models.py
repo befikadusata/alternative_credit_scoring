@@ -29,7 +29,9 @@ class PredictionInput(BaseModel):
         gt=0,
     )
     term: str = Field(
-        ..., description="The number of payments on the loan", pattern=r"^(36|60) months$"
+        ...,
+        description="The number of payments on the loan",
+        pattern=r"^(36|60) months$",
     )
     int_rate: float = Field(..., description="Interest Rate on the loan", gt=0, le=100)
     installment: float = Field(

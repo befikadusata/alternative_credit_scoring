@@ -11,6 +11,7 @@ This module sets up the FastAPI application with endpoints for:
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Lifespan context manager to handle startup and shutdown events."""
@@ -55,13 +56,14 @@ async def lifespan(app: FastAPI):
     # Shutdown code would go here if needed
     logger.info("Shutting down Credit Scoring API...")
 
+
 app = FastAPI(
     title="Credit Scoring API",
     description="API for making credit scoring predictions with Champion-Challenger support",
     version="1.1.0",
     docs_url="/docs",
     redoc_url="/redoc",
-    lifespan=lifespan
+    lifespan=lifespan,
 )
 
 import logging
@@ -137,7 +139,7 @@ def _load_model(model_name: str, model_version: str, model_type: str):
         "model_version": model_version,
         "load_time": datetime.now(timezone.utc),
         "last_prediction_time": None,
-        "feature_names": feature_names, # Store feature names
+        "feature_names": feature_names,  # Store feature names
     }
 
     if model_type == "champion":
@@ -152,8 +154,6 @@ def _load_model(model_name: str, model_version: str, model_type: str):
     logger.info(
         f"Successfully loaded {model_type} model: {model_name} version {model_version}"
     )
-
-
 
 
 @app.get("/")
@@ -256,7 +256,7 @@ async def predict_credit_risk(request: PredictionRequest):
 
     try:
         start_time = time.time()
-        
+
         # Create a DataFrame from the input features
         input_data_dict = input_features.model_dump(exclude_unset=True)
         # Explicitly remove loan_id before cleaning and prediction
@@ -264,7 +264,7 @@ async def predict_credit_risk(request: PredictionRequest):
         input_df = pd.DataFrame([input_data_dict])
 
         # Convert all object dtype columns (categorical) to numerical using one-hot encoding
-        for col in input_df.select_dtypes(include=['object']).columns:
+        for col in input_df.select_dtypes(include=["object"]).columns:
             if col in input_df.columns:
                 dummies = pd.get_dummies(input_df[col], prefix=col)
                 input_df = pd.concat([input_df.drop(columns=[col]), dummies], axis=1)
@@ -275,10 +275,12 @@ async def predict_credit_risk(request: PredictionRequest):
         # Align columns with the model's expected feature names
         expected_features = model_info.get("feature_names", [])
         if not expected_features:
-            logger.warning("Model feature names not found. Proceeding without feature alignment.")
+            logger.warning(
+                "Model feature names not found. Proceeding without feature alignment."
+            )
         else:
             scaled_df = scaled_df.reindex(columns=expected_features, fill_value=0)
-        
+
         prediction_proba = model.predict_proba(scaled_df)
         prediction = model.predict(scaled_df)
 
@@ -369,17 +371,17 @@ async def predict_credit_risk_batch(request: BatchPredictionRequest):
 
     try:
         start_time = time.time()
-        
+
         # Create a DataFrame from the batch of inputs
         input_data_dicts = []
         for f in processed_inputs:
             input_data_dict = f.model_dump(exclude_unset=True)
-            input_data_dict.pop("loan_id", None) # Explicitly remove loan_id
+            input_data_dict.pop("loan_id", None)  # Explicitly remove loan_id
             input_data_dicts.append(input_data_dict)
         input_df = pd.DataFrame(input_data_dicts)
-        
+
         # Convert all object dtype columns (categorical) to numerical using one-hot encoding
-        for col in input_df.select_dtypes(include=['object']).columns:
+        for col in input_df.select_dtypes(include=["object"]).columns:
             if col in input_df.columns:
                 dummies = pd.get_dummies(input_df[col], prefix=col)
                 input_df = pd.concat([input_df.drop(columns=[col]), dummies], axis=1)
@@ -390,7 +392,9 @@ async def predict_credit_risk_batch(request: BatchPredictionRequest):
         # Align columns with the model's expected feature names
         expected_features = model_info.get("feature_names", [])
         if not expected_features:
-            logger.warning("Model feature names not found. Proceeding without feature alignment.")
+            logger.warning(
+                "Model feature names not found. Proceeding without feature alignment."
+            )
         else:
             scaled_df = scaled_df.reindex(columns=expected_features, fill_value=0)
 

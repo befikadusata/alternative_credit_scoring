@@ -88,7 +88,7 @@ class FeatureEngineer:
             # Map grades to numeric values (A=1, B=2, ..., G=7)
             grade_mapping = {"A": 1, "B": 2, "C": 3, "D": 4, "E": 5, "F": 6, "G": 7}
             df["grade_numeric"] = df["grade"].map(grade_mapping).fillna(0)
-            df = df.drop("grade", axis=1) # Drop original column
+            df = df.drop("grade", axis=1)  # Drop original column
 
         # Sub-grade based features
         if "sub_grade" in df.columns:
@@ -131,7 +131,7 @@ class FeatureEngineer:
                 "G5": 35,
             }
             df["sub_grade_numeric"] = df["sub_grade"].map(sub_grade_mapping).fillna(0)
-            df = df.drop("sub_grade", axis=1) # Drop original column
+            df = df.drop("sub_grade", axis=1)  # Drop original column
 
         # Employment length-based features
         if "emp_length" in df.columns:
@@ -145,13 +145,15 @@ class FeatureEngineer:
                 df["home_ownership"], prefix="home_ownership"
             )
             df = pd.concat([df, home_ownership_dummies], axis=1)
-            df = df.drop("home_ownership", axis=1) # Drop original column
-        elif "home_ownership_n" in df.columns: # Handle case where it's already named home_ownership_n
+            df = df.drop("home_ownership", axis=1)  # Drop original column
+        elif (
+            "home_ownership_n" in df.columns
+        ):  # Handle case where it's already named home_ownership_n
             home_ownership_dummies = pd.get_dummies(
                 df["home_ownership_n"], prefix="home_ownership"
             )
             df = pd.concat([df, home_ownership_dummies], axis=1)
-            df = df.drop("home_ownership_n", axis=1) # Drop original column
+            df = df.drop("home_ownership_n", axis=1)  # Drop original column
 
         # Purpose-based features
         if "purpose" in df.columns:
@@ -160,20 +162,24 @@ class FeatureEngineer:
             df["is_debt_consolidation"] = (
                 df["purpose"].isin(debt_consolidation_purposes).astype(int)
             )
-            df = df.drop("purpose", axis=1) # Drop original column
+            df = df.drop("purpose", axis=1)  # Drop original column
 
         # Verification Status features (assuming it's categorical and needs to be dropped after processing)
         if "verification_status" in df.columns:
             # Example: One-hot encode verification status if needed, then drop original
-            verification_status_dummies = pd.get_dummies(df["verification_status"], prefix="verification_status")
+            verification_status_dummies = pd.get_dummies(
+                df["verification_status"], prefix="verification_status"
+            )
             df = pd.concat([df, verification_status_dummies], axis=1)
-            df = df.drop("verification_status", axis=1) # Drop original column
-        
+            df = df.drop("verification_status", axis=1)  # Drop original column
+
         # Initial list status features
         if "initial_list_status" in df.columns:
-            initial_list_status_dummies = pd.get_dummies(df["initial_list_status"], prefix="initial_list_status")
+            initial_list_status_dummies = pd.get_dummies(
+                df["initial_list_status"], prefix="initial_list_status"
+            )
             df = pd.concat([df, initial_list_status_dummies], axis=1)
-            df = df.drop("initial_list_status", axis=1) # Drop original column
+            df = df.drop("initial_list_status", axis=1)  # Drop original column
 
         return df
 
@@ -183,10 +189,14 @@ class FeatureEngineer:
         if "issue_d" in df.columns:
             df["issue_d"] = pd.to_datetime(df["issue_d"], errors="coerce")
         if "earliest_cr_line" in df.columns:
-            df["earliest_cr_line"] = pd.to_datetime(df["earliest_cr_line"], errors="coerce")
+            df["earliest_cr_line"] = pd.to_datetime(
+                df["earliest_cr_line"], errors="coerce"
+            )
 
         # Extract components from issue_d
-        if "issue_d" in df.columns and pd.api.types.is_datetime64_any_dtype(df["issue_d"]):
+        if "issue_d" in df.columns and pd.api.types.is_datetime64_any_dtype(
+            df["issue_d"]
+        ):
             df["issue_month"] = df["issue_d"].dt.month
             df["issue_year"] = df["issue_d"].dt.year
             df["issue_day_of_week"] = df["issue_d"].dt.dayofweek
@@ -194,7 +204,7 @@ class FeatureEngineer:
         # If loan term is available and is object type (string like "36 months")
         if "term" in df.columns and df["term"].dtype == "object":
             df["term_numeric"] = df["term"].str.extract(r"(\d+)").astype(int)
-            df = df.drop("term", axis=1) # Drop original term column
+            df = df.drop("term", axis=1)  # Drop original term column
 
         # Calculate credit history length
         if (
@@ -321,9 +331,11 @@ class FeatureEngineer:
             df[target_col] = (
                 df["loan_status"].map(default_mapping).fillna(0).astype(int)
             )
-        elif "Default" in df.columns: # Handle the case where the column is already named "Default"
+        elif (
+            "Default" in df.columns
+        ):  # Handle the case where the column is already named "Default"
             df[target_col] = df["Default"].astype(int)
-            df = df.drop("Default", axis=1) # Drop original "Default" column
+            df = df.drop("Default", axis=1)  # Drop original "Default" column
 
         return df
 
@@ -340,11 +352,13 @@ def apply_feature_engineering(df: pd.DataFrame) -> pd.DataFrame:
     """
     engineer = FeatureEngineer()
     df = engineer.create_features(df)
-    df = engineer.create_target_variable(df, "default") # Ensure target is created during feature engineering
-    
+    df = engineer.create_target_variable(
+        df, "default"
+    )  # Ensure target is created during feature engineering
+
     # Drop any remaining non-numerical columns that are not intended to be features
     df = df.drop(columns=["title", "desc"], errors="ignore")
-    
+
     return df
 
 

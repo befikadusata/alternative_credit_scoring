@@ -26,7 +26,9 @@ class DataCleaner:
         self.scalers = {}
         self.logger = logging.getLogger(__name__)
 
-    def clean_loan_data(self, df: pd.DataFrame, exclude_columns: Optional[List[str]] = None) -> pd.DataFrame:
+    def clean_loan_data(
+        self, df: pd.DataFrame, exclude_columns: Optional[List[str]] = None
+    ) -> pd.DataFrame:
         """
         Apply comprehensive cleaning to loan data.
 
@@ -98,7 +100,6 @@ class DataCleaner:
                 df["issue_d"], format="%b-%Y", errors="coerce"
             )
 
-
         return df
 
     def _convert_employment_length(self, value):
@@ -155,7 +156,9 @@ class DataCleaner:
 
         return df
 
-    def _remove_outliers(self, df: pd.DataFrame, exclude_columns: Optional[List[str]] = None) -> pd.DataFrame:
+    def _remove_outliers(
+        self, df: pd.DataFrame, exclude_columns: Optional[List[str]] = None
+    ) -> pd.DataFrame:
         """Remove outliers using IQR method for numerical columns."""
         if exclude_columns is None:
             exclude_columns = []
@@ -185,7 +188,9 @@ class DataCleaner:
 
         return df
 
-    def _validate_data_ranges(self, df: pd.DataFrame, exclude_columns: Optional[List[str]] = None) -> pd.DataFrame:
+    def _validate_data_ranges(
+        self, df: pd.DataFrame, exclude_columns: Optional[List[str]] = None
+    ) -> pd.DataFrame:
         """Validate that data falls within expected ranges."""
         if exclude_columns is None:
             exclude_columns = []
@@ -248,7 +253,10 @@ class DataCleaner:
                 # This ensures that all columns are numerical after encoding
                 known_classes = set(self.label_encoders[col].classes_)
                 # Use a temporary mapping to assign -1 to unseen categories
-                mapping_dict = {cls: idx for idx, cls in enumerate(self.label_encoders[col].classes_)}
+                mapping_dict = {
+                    cls: idx
+                    for idx, cls in enumerate(self.label_encoders[col].classes_)
+                }
                 df[col] = df[col].astype(str).map(mapping_dict).fillna(-1).astype(int)
 
         return df

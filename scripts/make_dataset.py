@@ -113,11 +113,12 @@ def main(
     # Step 2: Engineer features
     logger.info("Starting feature engineering...")
     df_engineered = engineer.create_features(df_cleaned)
-    df_engineered = engineer.create_target_variable(df_engineered, "default") # Ensure target is created during feature engineering
+    df_engineered = engineer.create_target_variable(
+        df_engineered, "default"
+    )  # Ensure target is created during feature engineering
     logger.info(
         f"Feature engineering completed. Shape after feature engineering: {df_engineered.shape}"
     )
-
 
     # Step 3: Create target variable if not already present
     if (
