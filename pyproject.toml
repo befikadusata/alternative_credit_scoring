@@ -27,7 +27,11 @@ dependencies = [
     "python-json-logger (>=4.0.0,<5.0.0)",
     "json-logger (>=0.0.1,<0.0.2)",
     "psycopg2-binary (>=2.9.11,<3.0.0)",
-    "boto3 (>=1.42.4,<2.0.0)"
+    "boto3 (>=1.42.4,<2.0.0)",
+    "apache-airflow (>=2.8.0,<3.0.0)",
+    "apache-airflow-providers-docker (>=3.0.0,<4.0.0)",
+    "evidently (>=0.4.0,<1.0.0)",
+    "prometheus-client (>=0.19.0,<1.0.0)"
 ]
 
 

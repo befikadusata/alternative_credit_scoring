@@ -36,6 +36,20 @@ services:
       timeout: 20s
       retries: 3
 
+  # Redis for feature caching and Airflow Celery broker
+  redis:
+    image: redis:7-alpine
+    container_name: credit-scoring-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   # MLflow tracking server
   mlflow:
     image: python:3.10-slim
@@ -74,6 +88,200 @@ services:
           --serve-artifacts
       "
 
-volumes:
-  postgres_data:
-  minio_data:
+  # API service for the credit scoring application
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: credit-scoring-api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./src:/app/src
+      - ./pyproject.toml:/app/pyproject.toml
+      - ./poetry.lock:/app/poetry.lock
+    depends_on:
+      mlflow:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - MLFLOW_TRACKING_URI=http://mlflow:5000
+      - CHAMPION_MODEL_NAME=credit_scoring_model
+      - CHAMPION_MODEL_VERSION=champion
+      - CHALLENGER_MODEL_NAME=credit_scoring_model_challenger
+      - CHALLENGER_MODEL_VERSION=challenger
+      - CHALLENGER_TRAFFIC_PERCENTAGE=10
+    command: poetry run uvicorn src.api.main:app --host 0.0.0.0 --port 8000 --reload
+
+  # Airflow PostgreSQL database
+  airflow-postgres:
+    image: postgres:13
+    container_name: airflow-postgres
+    environment:
+      POSTGRES_DB: airflow
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+    volumes:
+      - airflow_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U airflow"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Airflow webserver
+  airflow-webserver:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.airflow
+    container_name: airflow-webserver
+    ports:
+      - "8080:8080"
+    environment:
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow-postgres:5432/airflow
+      AIRFLOW__CELERY__BROKER_URL: redis://redis:6379/1
+      AIRFLOW__CELERY__RESULT_BACKEND: redis://redis:6379/2
+      AIRFLOW__CORE__EXECUTOR: CeleryExecutor
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      AIRFLOW__CORE__DAGS_FOLDER: /app/dags
+      AIRFLOW__WEBSERVER__RBAC: "True"
+      AIRFLOW__WEBSERVER__AUTHENTICATE: "True"
+      AIRFLOW__API__AUTH_BACKENDS: 'airflow.api.auth.backend.basic_auth'
+      AIRFLOW_WEBSERVER_DAG_PARSE_INTERVAL: 30
+      _AIRFLOW_DB_UPGRADE: "true"
+      _AIRFLOW_WWW_USER_CREATE: "true"
+      _AIRFLOW_WWW_USER_USERNAME: "airflow"
+      _AIRFLOW_WWW_USER_PASSWORD: "airflow"
+    volumes:
+      - ./dags:/app/dags
+      - ./logs:/app/logs
+      - ./src:/app/src  # To allow DAGs to import local modules
+      - ./scripts:/app/scripts
+      - ./configs:/app/configs
+    depends_on:
+      airflow-postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: webserver
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:8080/health"]
+      interval: 30s
+      timeout: 30s
+      retries: 5
+
+  # Airflow scheduler
+  airflow-scheduler:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.airflow
+    container_name: airflow-scheduler
+    environment:
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow-postgres:5432/airflow
+      AIRFLOW__CELERY__BROKER_URL: redis://redis:6379/1
+      AIRFLOW__CELERY__RESULT_BACKEND: redis://redis:6379/2
+      AIRFLOW__CORE__EXECUTOR: CeleryExecutor
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      AIRFLOW__CORE__DAGS_FOLDER: /app/dags
+    volumes:
+      - ./dags:/app/dags
+      - ./logs:/app/logs
+      - ./src:/app/src
+      - ./scripts:/app/scripts
+      - ./configs:/app/configs
+    depends_on:
+      airflow-postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: scheduler
+    healthcheck:
+      test: ["CMD-SHELL", "airflow jobs check --job-type SchedulerJob --hostname $(hostname)"]
+      interval: 30s
+      timeout: 30s
+      retries: 5
+
+  # Airflow worker
+  airflow-worker:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.airflow
+    container_name: airflow-worker
+    environment:
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow-postgres:5432/airflow
+      AIRFLOW__CELERY__BROKER_URL: redis://redis:6379/1
+      AIRFLOW__CELERY__RESULT_BACKEND: redis://redis:6379/2
+      AIRFLOW__CORE__EXECUTOR: CeleryExecutor
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      AIRFLOW__CORE__DAGS_FOLDER: /app/dags
+      AIRFLOW_CELERY_QUEUES: default
+    volumes:
+      - ./dags:/app/dags
+      - ./logs:/app/logs
+      - ./src:/app/src
+            - ./scripts:/app/scripts
+            - ./configs:/app/configs
+          depends_on:
+            airflow-scheduler:
+              condition: service_healthy
+          command: worker
+      
+        # Initialize Airflow DB and User
+        airflow-init:
+          build:
+            context: .
+            dockerfile: docker/Dockerfile.airflow
+          container_name: airflow-init
+          environment:
+            AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow-postgres:5432/airflow
+            _AIRFLOW_DB_UPGRADE: "true"
+            _AIRFLOW_WWW_USER_CREATE: "true"
+            _AIRFLOW_WWW_USER_USERNAME: "airflow"
+            _AIRFLOW_WWW_USER_PASSWORD: "airflow"
+            AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+          depends_on:
+            airflow-postgres:
+              condition: service_healthy
+          entrypoint: /bin/bash -c "/entrypoint.sh airflow db migrate && /entrypoint.sh airflow users create --username airflow --firstname airflow --lastname user --role Admin --email airflow@example.com --password airflow"
+      
+        # Prometheus for metrics collection
+        prometheus:
+          image: prom/prometheus:v2.45.0
+          container_name: prometheus
+          ports:
+            - "9090:9090"
+          volumes:
+            - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+            - ./prometheus/alert.rules.yml:/etc/prometheus/alert.rules.yml
+            - prometheus_data:/prometheus
+          command:
+            - '--config.file=/etc/prometheus/prometheus.yml'
+            - '--storage.tsdb.path=/prometheus'
+            - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+            - '--web.console.templates=/usr/share/prometheus/consoles'
+          depends_on:
+            api:
+              condition: service_started
+      
+        # Alertmanager for handling alerts
+        alertmanager:
+          image: prom/alertmanager:v0.25.0
+          container_name: alertmanager
+          ports:
+            - "9093:9093"
+          volumes:
+            - ./prometheus/alertmanager.yml:/etc/alertmanager/alertmanager.yml
+          command:
+            - '--config.file=/etc/alertmanager/alertmanager.yml'
+      
+      volumes:
+        postgres_data:
+        minio_data:
+        redis_data:
+        airflow_postgres_data:
+        airflow_logs:
+        prometheus_data:
+      

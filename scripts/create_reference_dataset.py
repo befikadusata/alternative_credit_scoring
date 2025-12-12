@@ -1,22 +1,19 @@
-#!/usr/bin/env python3
 """
-Script to create and register a reference dataset with versioning for monitoring.
+Script to create a reference dataset for Evidently AI monitoring.
 
-This script applies the full data processing pipeline to create a reference
-dataset that will be used for model monitoring and data drift detection.
+This script loads the processed training data, applies the same cleaning and
+preprocessing steps used during model training, and saves the resulting
+feature-only DataFrame to a specified output path. This cleaned, feature-only
+dataset serves as a baseline for data quality and drift checks.
 """
+
 import argparse
 import logging
 import os
 import sys
-from pathlib import Path
 
-# Add the src directory to the path so we can import our modules
-sys.path.append(os.path.join(os.path.dirname(__file__), ".."))  # noqa: E402
-
-# Import our custom modules
-from src.data.versioning import DataVersioner, create_reference_dataset
-
+import pandas as pd
+from src.data.cleaning import DataCleaner # Import DataCleaner from src
 
 def setup_logging():
     """Set up logging configuration."""
@@ -24,100 +21,76 @@ def setup_logging():
         level=logging.INFO,
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
         handlers=[
-            logging.FileHandler("reference_dataset_creation.log"),
             logging.StreamHandler(sys.stdout),
         ],
     )
     return logging.getLogger(__name__)
 
-
-def main(
-    raw_data_path: str,
-    reference_data_path: str = "data/reference/reference_dataset.csv",
-    mlflow_tracking_uri: str = "http://localhost:5000",
-):
+def main(input_path: str, output_path: str):
     """
-    Main function to create and register a reference dataset with versioning.
+    Main function to create the reference dataset.
 
     Args:
-        raw_data_path: Path to raw input data
-        reference_data_path: Path to save the reference dataset
-        mlflow_tracking_uri: URI for MLflow tracking server
+        input_path: Path to the processed training data (e.g., data/processed/train.csv)
+        output_path: Path where the cleaned, feature-only reference dataset will be saved
     """
-    logger = logging.getLogger(__name__)
-    logger.info("Starting reference dataset creation with versioning...")
+    logger = setup_logging()
+    logger.info(f"Starting creation of reference dataset from {input_path}...")
 
-    # Validate raw data path
-    if not os.path.exists(raw_data_path):
-        raise FileNotFoundError(f"Raw data file does not exist: {raw_data_path}")
+    # Load data
+    try:
+        df = pd.read_csv(input_path)
+        logger.info(f"Loaded data with shape: {df.shape}")
+    except FileNotFoundError:
+        logger.error(f"Input file not found at {input_path}")
+        sys.exit(1)
+    except Exception as e:
+        logger.error(f"Error loading input data: {e}")
+        sys.exit(1)
 
-    # Create reference data directory if it doesn't exist
-    Path(reference_data_path).parent.mkdir(parents=True, exist_ok=True)
+    # Separate features and target (if 'default' column exists)
+    if "default" in df.columns:
+        # We only want features for the reference dataset
+        X = df.drop("default", axis=1)
+        logger.info("Removed 'default' target column for reference dataset.")
+    else:
+        X = df.copy()
+        logger.info("No 'default' column found. Processing all columns as features.")
 
-    # Initialize the data versioner
-    versioner = DataVersioner(mlflow_tracking_uri=mlflow_tracking_uri)
+    # Initialize and use DataCleaner
+    cleaner = DataCleaner()
+    
+    # Apply cleaning steps
+    # Note: exclude_columns should not contain "default" here as it's already dropped
+    X_cleaned = cleaner.clean_loan_data(X, exclude_columns=[])
+    X_encoded = cleaner.encode_categorical_features(X_cleaned, fit=True)
+    X_scaled = cleaner.scale_numerical_features(X_encoded, fit=True)
 
-    # Create the reference dataset
-    logger.info("Creating reference dataset...")
-    reference_df = create_reference_dataset(
-        raw_data_path=raw_data_path, output_path=reference_data_path
-    )
+    logger.info(f"Cleaned and processed features shape: {X_scaled.shape}")
 
-    # Register the reference dataset with MLflow
-    logger.info("Registering reference dataset with versioning...")
-    dataset_name = Path(raw_data_path).stem
-    run_id = versioner.register_reference_dataset(
-        df=reference_df,
-        dataset_name=dataset_name,
-        description="Reference dataset for credit scoring model monitoring",
-    )
+    # Ensure output directory exists
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
 
-    logger.info(f"Reference dataset registered successfully with run ID: {run_id}")
-    logger.info(f"Reference dataset saved to: {reference_data_path}")
-
-    # Display basic info about the reference dataset
-    logger.info(f"Reference dataset shape: {reference_df.shape}")
-    logger.info(f"Columns in reference dataset: {list(reference_df.columns)}")
-
-    # If target column exists, show class distribution
-    if "default" in reference_df.columns:
-        target_dist = reference_df["default"].value_counts(normalize=True)
-        logger.info(f"Target distribution in reference dataset: \n{target_dist}")
-
+    # Save the processed DataFrame
+    X_scaled.to_csv(output_path, index=False)
+    logger.info(f"Reference dataset saved to {output_path}")
 
 if __name__ == "__main__":
-    logger = setup_logging()
-
     parser = argparse.ArgumentParser(
-        description="Create and register a reference dataset with versioning for monitoring."
+        description="Create a reference dataset for Evidently AI monitoring."
     )
     parser.add_argument(
-        "--raw_data_path",
+        "--input-path",
         type=str,
-        required=True,
-        help="Path to the raw input data file",
+        default="data/processed/train.csv",
+        help="Path to the processed training data (e.g., data/processed/train.csv).",
     )
     parser.add_argument(
-        "--reference_data_path",
+        "--output-path",
         type=str,
-        default="data/reference/reference_dataset.csv",
-        help="Path to save the reference dataset (default: data/reference/reference_dataset.csv)",
-    )
-    parser.add_argument(
-        "--mlflow_tracking_uri",
-        type=str,
-        default="http://localhost:5000",
-        help="MLflow tracking URI (default: http://localhost:5000)",
+        default="data/reference/reference.csv",
+        help="Path where the cleaned, feature-only reference dataset will be saved.",
     )
 
     args = parser.parse_args()
-
-    try:
-        main(
-            raw_data_path=args.raw_data_path,
-            reference_data_path=args.reference_data_path,
-            mlflow_tracking_uri=args.mlflow_tracking_uri,
-        )
-    except Exception as e:
-        logger.error(f"Reference dataset creation failed with error: {str(e)}")
-        sys.exit(1)
+    main(input_path=args.input_path, output_path=args.output_path)

@@ -288,9 +288,15 @@ def evaluate_model(model, X_test, y_test, model_name="Model"):
         "auc": auc,
         "cv_auc_mean": cv_mean,
         "cv_auc_std": cv_std,
-        "classification_report": class_report,
-        "confusion_matrix": cm,
+        # "classification_report": class_report, # Cannot log dict directly as metric
+        # "confusion_matrix": cm, # Cannot log numpy array directly as metric
     }
+    # Log specific metrics from the classification report
+    for class_label, scores in class_report.items():
+        if isinstance(scores, dict):
+            for metric_name, value in scores.items():
+                if isinstance(value, (int, float)):
+                    metrics[f"class_{class_label}_{metric_name}"] = value
 
     return metrics
 
@@ -300,6 +306,7 @@ def main(
     model_type: str = "xgboost",
     test_size: float = 0.2,
     random_state: int = 42,
+    registered_model_name: str = "credit_scoring_model",
 ):
     """
     Main function to train a baseline model.

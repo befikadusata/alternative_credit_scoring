@@ -18,7 +18,7 @@ For a high-level plan of upcoming work, please refer to the [PROJECT_ROADMAP.md]
 
 ## Getting Started
 
-Detailed instructions on how to set up the local development environment and run the project will be provided in [`docs/GETTING_STARTED.md`](./docs/GETTING_STARTED.md) (coming soon).
+Detailed instructions on how to set up the local development environment and run the project are provided in [GETTING_STARTED.md](./docs/GETTING_STARTED.md).
 
 ## Key Features
 

@@ -210,6 +210,95 @@ def load_model_from_registry(
             f"Returning DummyModel for '{model_name}' version '{model_version}'"
         )
 
+    """
+    Load a model and its corresponding DataCleaner from the MLflow Model Registry.
+
+    Args:
+        model_name: Name of the model in the registry
+        model_version: Version of the model (can be version number, "latest", or alias like "champion")
+        tracking_uri: MLflow tracking URI (if None, uses environment variable or default)
+
+    Returns:
+        A tuple containing the loaded PyFuncModel instance, the DataCleaner instance, and a list of feature names.
+    """
+    logger.info(
+        f"Attempting to load model '{model_name}' version/alias '{model_version}' from MLflow."
+    )
+
+    if tracking_uri:
+        mlflow.set_tracking_uri(tracking_uri)
+    elif os.getenv("MLFLOW_TRACKING_URI"):
+        mlflow.set_tracking_uri(os.getenv("MLFLOW_TRACKING_URI"))
+    else:
+        logger.error("MLflow Tracking URI not set. Cannot load model.")
+        raise ValueError("MLflow Tracking URI not configured.")
+
+    try:
+        # Construct the MLflow model URI
+        model_uri = f"models:/{model_name}/{model_version}"
+        logger.info(f"Loading MLflow model from URI: {model_uri}")
+        model = mlflow.pyfunc.load_model(model_uri)
+
+        # Get MLflow client to fetch model run details for artifacts
+        client = MlflowClient()
+        if isinstance(model_version, int):
+            model_version_obj = client.get_model_version(model_name, model_version)
+        else: # "latest", "champion", "challenger"
+            latest_versions = client.search_model_versions(f"name='{model_name}'")
+            # Filter by alias if specified (e.g., "champion", "challenger")
+            if model_version in ["champion", "challenger"]:
+                # MLflow 2.11+ supports aliases, older versions don't directly expose in search_model_versions
+                # For compatibility, we'll try to find by tags or assume 'latest' if alias not found.
+                # A more robust solution might involve iterating through aliases if available in API or tags.
+                found_version = None
+                for mv in latest_versions:
+                    if mv.current_stage == model_version.capitalize():
+                        found_version = mv
+                        break
+                if found_version:
+                    model_version_obj = found_version
+                else:
+                    logger.warning(f"Could not find model version with stage/alias '{model_version}'. Attempting to load 'latest'.")
+                    model_version_obj = client.get_latest_versions(model_name, stages=["Production", "Staging"])[0] if client.get_latest_versions(model_name, stages=["Production", "Staging"]) else None
+            elif model_version == "latest":
+                model_version_obj = client.get_latest_versions(model_name, stages=["Production", "Staging"])[0] if client.get_latest_versions(model_name, stages=["Production", "Staging"]) else None
+            else:
+                raise ValueError(f"Unsupported model version/alias: {model_version}")
+
+        if not model_version_obj:
+            raise ValueError(f"No model version found for '{model_name}' with alias/stage '{model_version}'")
+            
+        run_id = model_version_obj.run_id
+        logger.info(f"Model '{model_name}' version '{model_version}' is from MLflow Run ID: {run_id}")
+
+        # Load the DataCleaner (preprocessor) artifact
+        try:
+            cleaner_artifact_path = mlflow.artifacts.download_artifacts(
+                artifact_uri=f"runs:/{run_id}/preprocessor"
+            )
+            data_cleaner = joblib.load(cleaner_artifact_path)
+            logger.info("Successfully loaded DataCleaner preprocessor from MLflow artifacts.")
+        except Exception as e:
+            logger.error(f"Failed to load DataCleaner from MLflow artifacts for run {run_id}: {e}")
+            data_cleaner = None # Set to None if loading fails
+
+        # Load feature names artifact
+        try:
+            feature_names_artifact_path = mlflow.artifacts.download_artifacts(
+                artifact_uri=f"runs:/{run_id}/feature_names"
+            )
+            with open(feature_names_artifact_path, 'r') as f:
+                feature_names = json.load(f)
+            logger.info("Successfully loaded feature names from MLflow artifacts.")
+        except Exception as e:
+            logger.error(f"Failed to load feature names from MLflow artifacts for run {run_id}: {e}")
+            feature_names = [] # Set to empty list if loading fails
+
+
+        logger.info(
+            f"Successfully loaded model '{model_name}' version '{model_version}' and its associated artifacts."
+        )
+
         return model, data_cleaner, feature_names
 
     except Exception as e:
@@ -220,5 +309,7 @@ def load_model_from_registry(
 
 
 if __name__ == "__main__":
-    # Example usage
+    # Example usage (will need an MLflow server running and a model registered)
+    # Ensure MLFLOW_TRACKING_URI is set in your environment or passed explicitly
+    # model, cleaner, features = load_model_from_registry("credit_scoring_model", "latest")
     logger.info("Model loader module loaded successfully")
