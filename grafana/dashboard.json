@@ -160,7 +160,7 @@
       "options": {},
       "targets": [
         {
-          "expr": "data_drift_score",
+          "expr": "dataset_drift_score",
           "legendFormat": "drift score",
           "refId": "A"
         }
@@ -180,12 +180,32 @@
         "options": {},
         "targets": [
           {
-            "expr": "num_drifted_features",
+            "expr": "number_of_drifted_columns",
             "legendFormat": "drifted features",
             "refId": "A"
           }
         ],
         "title": "Number of Drifted Features",
+        "type": "graph"
+      },
+    {
+        "datasource": "Prometheus",
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 16
+        },
+        "id": 12,
+        "options": {},
+        "targets": [
+          {
+            "expr": "share_of_drifted_columns",
+            "legendFormat": "share of drifted columns",
+            "refId": "A"
+          }
+        ],
+        "title": "Share of Drifted Columns",
         "type": "graph"
       }
   ],

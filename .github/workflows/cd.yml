@@ -1,0 +1,133 @@
+name: CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-push:
+    name: Build and Push to ECR
+    runs-on: ubuntu-latest
+    environment: production # Use an environment to protect secrets
+    permissions:
+      id-token: write # For OIDC
+      contents: read
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-region: ${{ vars.AWS_REGION }} # Use repo variables
+          role-to-assume: ${{ secrets.AWS_IAM_ROLE_ARN }} # Use repo secrets
+          role-session-name: GitHubActionsCD
+
+      - name: Log in to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: credit-scoring-api
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+
+  deploy-to-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: build-and-push
+    environment: staging
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-region: ${{ vars.AWS_REGION }}
+          role-to-assume: ${{ secrets.AWS_IAM_ROLE_ARN }}
+          role-session-name: GitHubActionsCD
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.2.9 # Specify a version
+
+      - name: Terraform Init
+        run: terraform -chdir=terraform init
+
+      - name: Terraform Apply to Staging
+        run: |
+          terraform -chdir=terraform apply \
+            -var="docker_image_uri=${{ needs.build-and-push.outputs.image }}" \
+            -var="environment=staging" \
+            -auto-approve
+
+  run-e2e-tests:
+    name: Run End-to-End Tests
+    runs-on: ubuntu-latest
+    needs: deploy-to-staging
+    environment: staging
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+      - name: Run E2E tests against staging
+        run: |
+          # Here you would run your E2E test suite.
+          # This could be another pytest suite or a different framework.
+          # It would target the URL of the staging environment.
+          echo "Running E2E tests..."
+          # Example:
+          # pip install pytest requests
+          # STAGING_URL=$(aws cloudformation describe-stacks --stack-name credit-scoring-staging --query "Stacks[0].Outputs[?OutputKey=='ApiEndpointUrl'].OutputValue" --output text)
+          # pytest tests/e2e/ --base-url $STAGING_URL
+          echo "E2E tests passed."
+
+  request-approval:
+    name: Request Production Approval
+    runs-on: ubuntu-latest
+    needs: run-e2e-tests
+    environment: production
+    steps:
+      - name: Manual approval step
+        uses: trstringer/manual-approval@v1
+        with:
+          secret: ${{ secrets.GITHUB_TOKEN }}
+          approvers: ${{ vars.PRODUCTION_APPROVERS }} # Comma-separated list of GitHub usernames
+          minimum-approvals: 1
+          issue-title: "Deploy to Production"
+          issue-body: "Please approve the deployment of ${{ github.sha }} to production."
+          exclude-workflow-initiator-as-approver: false
+          
+deploy-to-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: request-approval
+    environment: production
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-region: ${{ vars.AWS_REGION }}
+          role-to-assume: ${{ secrets.AWS_IAM_ROLE_ARN }}
+          role-session-name: GitHubActionsCD
+      
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.2.9
+
+      - name: Terraform Apply to Production
+        run: |
+          terraform -chdir=terraform apply \
+            -var="docker_image_uri=${{ needs.build-and-push.outputs.image }}" \
+            -var="environment=production" \
+            -auto-approve

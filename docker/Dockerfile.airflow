@@ -1,0 +1,51 @@
+# Use an official Airflow base image
+# This image already contains Airflow and its common dependencies
+# Choose a version compatible with Python 3.10
+FROM apache/airflow:2.8.1-python3.10
+
+# Set Airflow home directory
+ENV AIRFLOW_HOME=/opt/airflow
+
+# Install system dependencies required for poetry and other packages
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    curl \
+    build-essential \
+    libpq-dev \
+    gcc \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install poetry
+ENV POETRY_VERSION=1.7.1
+ENV POETRY_HOME="/opt/poetry"
+ENV POETRY_VIRTUALENVS_IN_PROJECT=false # Do not create virtualenvs in project dir
+ENV PATH="$POETRY_HOME/bin:$PATH"
+
+RUN curl -sSL https://install.python-poetry.org | python - 
+
+# Set the working directory to where Airflow expects DAGs and configs
+WORKDIR /app
+
+# Copy pyproject.toml and poetry.lock
+COPY pyproject.toml poetry.lock ./
+
+# Install project dependencies
+# --no-root is important to avoid installing the project itself as editable
+# --only main to install only main dependencies and not dev or test
+# This will install all dependencies listed in pyproject.toml including MLflow, Evidently, etc.
+RUN poetry install --no-root --only main
+
+# Copy the rest of the application code
+# This includes src/ (for custom modules) and dags/ (for DAG files)
+COPY src/ /app/src/
+COPY dags/ /app/dags/
+COPY scripts/ /app/scripts/
+COPY configs/ /app/configs/
+COPY .env.template /app/.env.template
+
+# Ensure DAGs directory is created and has correct permissions
+RUN mkdir -p /opt/airflow/dags && \
+    chown -R airflow:airflow /opt/airflow
+# Switch back to airflow user
+USER airflow

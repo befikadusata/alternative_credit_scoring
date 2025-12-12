@@ -1,0 +1,41 @@
+# prometheus/alert.rules.yml
+groups:
+  - name: ModelMonitoringAlerts
+    rules:
+      - alert: HighFeatureDrift
+        expr: share_of_drifted_columns > 0.3
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High feature drift detected ({{ $value }})"
+          description: "More than 30% of features have drifted in the last hour."
+
+      - alert: HighPredictionDrift
+        expr: prediction_drift > 0.15
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High prediction drift detected ({{ $value }})"
+          description: "The distribution of model predictions has drifted significantly."
+
+  - name: ApiPerformanceAlerts
+    rules:
+      - alert: HighApiErrorRate
+        expr: (sum(rate(http_requests_total{status=~"5.*"}[5m])) / sum(rate(http_requests_total[5m]))) > 0.05
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "High API Error Rate ({{ $value }})"
+          description: "The API is returning a high number of 5xx errors."
+
+      - alert: HighApiLatency
+        expr: http_request_duration_seconds_summary{quantile="0.95"} > 0.5
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High API Latency ({{ $value }}s)"
+          description: "The 95th percentile API latency is over 500ms."
