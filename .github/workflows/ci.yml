@@ -25,14 +25,10 @@ jobs:
       - name: Install dependencies
         run: poetry install --no-root
 
-      - name: Run Black formatter check
-        run: poetry run black --check .
-
-      - name: Run isort check
-        run: poetry run isort --check .
-      
-      - name: Run flake8 linter
-        run: poetry run flake8 .
+      - name: Run Ruff linter and formatter check
+        run: |
+          poetry run ruff check .
+          poetry run ruff format --check .
 
   test:
     name: Run Tests
