@@ -8,7 +8,7 @@ Before getting started, ensure you have the following installed on your system:
 
 - [Docker](https://docs.docker.com/get-docker/)
 - [Docker Compose](https://docs.docker.com/compose/install/)
-- [Python 3.10+](https://www.python.org/downloads/)
+- [Python 3.13.x](https://www.python.org/downloads/) (specifically 3.13.x due to Apache Airflow compatibility)
 - [Poetry](https://python-poetry.org/docs/#installation) (optional, but recommended)
 
 ## Quick Setup
@@ -167,7 +167,7 @@ git push origin feature/your-feature-name
 
 ### Dependency installation fails
 
-- Ensure you're using Python 3.10+
+- Ensure you're using Python 3.13.x (due to Apache Airflow compatibility)
 - Consider using a virtual environment
 - Check that your internet connection is stable
 

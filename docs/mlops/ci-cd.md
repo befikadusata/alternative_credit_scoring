@@ -30,7 +30,7 @@ The pipeline consists of two main jobs: `lint-and-format` and `test`.
 *   **Purpose:** Enforce code style and identify basic syntax errors before running the test suite.
 *   **Steps:**
     *   Checks out the repository code.
-    *   Sets up a Python 3.10 environment.
+    *   Sets up a Python 3.13.x environment (due to Apache Airflow compatibility).
     *   Installs [Poetry](https://python-poetry.org/) for dependency management.
     *   Installs project dependencies using `poetry install`.
     *   Runs `poetry run black --check .` to ensure code is formatted correctly.
@@ -43,7 +43,7 @@ The pipeline consists of two main jobs: `lint-and-format` and `test`.
 *   **Purpose:** Verify the correctness of the application logic by running the test suite. This job depends on the successful completion of the `lint-and-format` job.
 *   **Steps:**
     *   Checks out the repository code.
-    *   Sets up a Python 3.10 environment and installs Poetry.
+    *   Sets up a Python 3.13.x environment (due to Apache Airflow compatibility) and installs Poetry.
     *   Installs project dependencies using `poetry install`.
     *   Runs the test suite using `poetry run pytest`.
 

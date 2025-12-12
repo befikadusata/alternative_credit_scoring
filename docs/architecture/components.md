@@ -16,7 +16,7 @@ The API layer is the front door to the system, providing a robust interface for 
 - **Key Features:**
     - **Auto-generated Documentation:** FastAPI provides OpenAPI (Swagger) and ReDoc documentation automatically, simplifying integration.
     - **Asynchronous Support:** Async request handling allows for high concurrency and efficient I/O operations.
-    - **Technology:** Built with Python 3.10+, FastAPI, and the Uvicorn ASGI server.
+    - **Technology:** Built with Python 3.13.x (due to Apache Airflow compatibility), FastAPI, and the Uvicorn ASGI server.
 
 ## 2. Prediction Service Layer
 
