@@ -19,7 +19,8 @@ RUN apt-get update && \
 # Install poetry
 ENV POETRY_VERSION=1.7.1
 ENV POETRY_HOME="/opt/poetry"
-ENV POETRY_VIRTUALENVS_IN_PROJECT=false # Do not create virtualenvs in project dir
+ENV POETRY_VIRTUALENVS_IN_PROJECT=false
+# Do not create virtualenvs in project dir
 ENV PATH="$POETRY_HOME/bin:$PATH"
 
 RUN curl -sSL https://install.python-poetry.org | python - 

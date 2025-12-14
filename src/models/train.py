@@ -307,6 +307,7 @@ def main(
     test_size: float = 0.2,
     random_state: int = 42,
     registered_model_name: str = "credit_scoring_model",
+    mlflow_tracking_uri: str = "http://localhost:5000",
 ):
     """
     Main function to train a baseline model.
@@ -316,54 +317,79 @@ def main(
         model_type: Type of model to train ('logistic_regression', 'xgboost', or 'random_forest')
         test_size: Proportion of data to use for validation
         random_state: Random seed for reproducibility
+        registered_model_name: Name for the registered model in MLflow
+        mlflow_tracking_uri: URI for MLflow tracking server
     """
     logger = logging.getLogger(__name__)
     logger.info("Starting baseline model training...")
 
-    # Load data
-    X, y = load_data(train_data_path)
+    mlflow.set_tracking_uri(mlflow_tracking_uri)
+    mlflow.set_experiment(registered_model_name)
 
-    # Split data
-    logger.info(
-        f"Splitting data with test_size={test_size}, random_state={random_state}"
-    )
-    X_train, X_val, y_train, y_val = train_test_split(
-        X, y, test_size=test_size, random_state=random_state, stratify=y
-    )
+    with mlflow.start_run() as run:
+        run_id = run.info.run_id
+        logger.info(f"MLflow Run ID: {run_id}")
 
-    logger.info(f"Training set: {X_train.shape}, Validation set: {X_val.shape}")
+        # Save run_id for Airflow XCom
+        os.makedirs("/airflow/xcom", exist_ok=True)
+        with open("/airflow/xcom/run_id", "w") as f:
+            f.write(run_id)
 
-    # Initialize and use DataCleaner
-    cleaner = DataCleaner()
-    X_train = cleaner.clean_loan_data(X_train, exclude_columns=["default"])
-    X_val = cleaner.clean_loan_data(X_val, exclude_columns=["default"])
+        # Load data
+        X, y = load_data(train_data_path)
 
-    X_train = cleaner.encode_categorical_features(X_train, fit=True)
-    X_val = cleaner.encode_categorical_features(X_val, fit=False)
+        # Split data
+        logger.info(
+            f"Splitting data with test_size={test_size}, random_state={random_state}"
+        )
+        X_train, X_val, y_train, y_val = train_test_split(
+            X, y, test_size=test_size, random_state=random_state, stratify=y
+        )
 
-    X_train = cleaner.scale_numerical_features(X_train, fit=True)
-    X_val = cleaner.scale_numerical_features(X_val, fit=False)
+        logger.info(f"Training set: {X_train.shape}, Validation set: {X_val.shape}")
 
-    # Save the cleaner
-    cleaner_path = "data_cleaner.joblib"
-    joblib.dump(cleaner, cleaner_path)
-    # mlflow.log_artifact(cleaner_path, "preprocessor")
+        # Log params
+        mlflow.log_param("model_type", model_type)
+        mlflow.log_param("test_size", test_size)
+        mlflow.log_param("random_state", random_state)
 
-    # Initialize and train model based on type
-    if model_type == "logistic_regression":
-        model = train_logistic_regression(X_train, y_train, X_val, y_val)
-    elif model_type == "xgboost":
-        model = train_xgboost(X_train, y_train, X_val, y_val)
-    elif model_type == "random_forest":
-        model = train_random_forest(X_train, y_train, X_val, y_val)
-    else:
-        raise ValueError(f"Unsupported model type: {model_type}")
+        # Initialize and use DataCleaner
+        cleaner = DataCleaner()
+        X_train = cleaner.clean_loan_data(X_train, exclude_columns=["default"])
+        X_val = cleaner.clean_loan_data(X_val, exclude_columns=["default"])
 
-    # Evaluate model
-    logger.info("Evaluating model performance...")
-    metrics = evaluate_model(model, X_val, y_val, model_type)
+        X_train = cleaner.encode_categorical_features(X_train, fit=True)
+        X_val = cleaner.encode_categorical_features(X_val, fit=False)
 
-    return model, metrics
+        X_train = cleaner.scale_numerical_features(X_train, fit=True)
+        X_val = cleaner.scale_numerical_features(X_val, fit=False)
+
+        # Save the cleaner
+        cleaner_path = "data_cleaner.joblib"
+        joblib.dump(cleaner, cleaner_path)
+        mlflow.log_artifact(cleaner_path, "preprocessor")
+
+        # Initialize and train model based on type
+        if model_type == "logistic_regression":
+            model = train_logistic_regression(X_train, y_train, X_val, y_val)
+        elif model_type == "xgboost":
+            model = train_xgboost(X_train, y_train, X_val, y_val)
+        elif model_type == "random_forest":
+            model = train_random_forest(X_train, y_train, X_val, y_val)
+        else:
+            raise ValueError(f"Unsupported model type: {model_type}")
+
+        # Evaluate model
+        logger.info("Evaluating model performance...")
+        metrics = evaluate_model(model, X_val, y_val, model_type)
+        mlflow.log_metrics(metrics)
+
+        # Log model
+        mlflow.sklearn.log_model(model, "model", registered_model_name=registered_model_name)
+
+        logger.info("Model, metrics, and artifacts logged to MLflow.")
+
+        return model, metrics
 
 
 if __name__ == "__main__":
@@ -397,6 +423,18 @@ if __name__ == "__main__":
         default=42,
         help="Random seed for reproducibility (default: 42)",
     )
+    parser.add_argument(
+        "--registered_model_name",
+        type=str,
+        default="credit_scoring_model",
+        help="Name for the registered model in MLflow",
+    )
+    parser.add_argument(
+        "--mlflow_tracking_uri",
+        type=str,
+        default="http://localhost:5000",
+        help="MLflow tracking URI",
+    )
 
     args = parser.parse_args()
 
@@ -406,6 +444,8 @@ if __name__ == "__main__":
             model_type=args.model_type,
             test_size=args.test_size,
             random_state=args.random_state,
+            registered_model_name=args.registered_model_name,
+            mlflow_tracking_uri=args.mlflow_tracking_uri,
         )
 
         logger.info("Baseline model training completed successfully!")

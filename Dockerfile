@@ -1,5 +1,5 @@
 # Use an official Python runtime as a parent image
-FROM python:3.10-slim
+FROM python:3.13-slim
 
 # Set environment variables for poetry
 ENV POETRY_VERSION=1.7.1
@@ -7,9 +7,13 @@ ENV POETRY_HOME="/opt/poetry"
 ENV POETRY_VIRTUALENVS_IN_PROJECT=true
 ENV PATH="$POETRY_HOME/bin:$PATH"
 
-# Install poetry
-RUN apt-get update && apt-get install -y curl \
-    && curl -sSL https://install.python-poetry.org | python - 
+# Install poetry and build dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    build-essential \
+    gcc \
+    g++ \
+    && curl -sSL https://install.python-poetry.org | python -
 
 # Set the working directory in the container
 WORKDIR /app
@@ -20,7 +24,7 @@ COPY poetry.lock pyproject.toml ./
 # Install project dependencies
 # --no-root is important to avoid installing the project itself as editable
 # --no-dev is to avoid installing development dependencies
-RUN poetry install --no-root --no-dev
+RUN poetry install --no-root --no-dev -vvv
 
 # Copy the rest of the application code
 COPY src/ /app/src/

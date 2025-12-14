@@ -22,7 +22,8 @@ Detailed instructions on how to set up the local development environment and run
 
 ## Key Features
 
-*   **Real-time Prediction:** Low-latency API for instant credit decisions.
+*   **Real-time Prediction:** Low-latency API for instant credit decisions, with streaming support via Kafka.
+*   **ML Pipeline Orchestration:** Automated training, evaluation, and deployment pipeline using Apache Airflow.
 *   **MLflow Integration:** Comprehensive experiment tracking, model registry, and lifecycle management.
 *   **Champion-Challenger Deployment:** Safe model deployments with A/B testing capabilities.
 *   **Drift Detection:** Automated monitoring for data and model drift using Evidently AI.
@@ -32,9 +33,29 @@ Detailed instructions on how to set up the local development environment and run
 ## Technology Stack
 
 *   **ML Framework:** XGBoost, Scikit-learn
+*   **Orchestration:** Apache Airflow
+*   **Streaming:** Apache Kafka
 *   **MLOps:** MLflow, Evidently AI
 *   **API:** FastAPI, Uvicorn
-*   **Data Storage:** PostgreSQL (MLflow metadata), MinIO (Artifacts), Redis (Feature Store)
+*   **Data Storage:** PostgreSQL (MLflow & Airflow metadata), MinIO (Artifacts), Redis (Feature Store)
 *   **Monitoring:** Prometheus, Grafana
 *   **Containerization:** Docker, Docker Compose
 *   **CI/CD:** GitHub Actions (planned)
+
+## Running the ML Pipeline
+
+The entire ML pipeline can be executed using Apache Airflow.
+
+1.  **Start all services:**
+    ```bash
+    docker-compose up -d
+    ```
+2.  **Access the Airflow UI:**
+    Open your browser and navigate to `http://localhost:8080`.
+    - **Username:** `airflow`
+    - **Password:** `airflow`
+
+3.  **Trigger the ML Pipeline DAG:**
+    - In the Airflow UI, find the `ml_pipeline_dag`.
+    - Unpause the DAG by clicking the toggle on the left.
+    - Manually trigger the DAG by clicking the "play" button on the right.

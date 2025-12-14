@@ -101,13 +101,30 @@ def test_encode_categorical_features(data_cleaner, sample_dataframe):
     assert encoded_df["grade"].dtype != "object"
 
     # Transform using the fitted encoder
-    # This test needs refinement based on how unknown values are handled.
-    # The current implementation will raise an error if 'D' is not in the original fit.
-    # A robust implementation should handle this gracefully.
-    # For now, let's just test that it works on known values
     df_known = pd.DataFrame({"grade": ["A", "B"]})
     encoded_known_df = data_cleaner.encode_categorical_features(df_known, fit=False)
-    assert list(encoded_known_df["grade"]) == [0, 1]  # Assuming A->0, B->1
+    # The mapping will be A=0, B=1, C=2.
+    assert list(encoded_known_df["grade"]) == [0, 1]
+
+
+def test_encode_categorical_features_unknown_categories(data_cleaner):
+    """Tests that unknown categories are handled correctly during transformation."""
+    # 1. Fit the encoder on known categories 'A' and 'B'
+    fit_df = pd.DataFrame({"category": ["A", "A", "B", "B"]})
+    data_cleaner.encode_categorical_features(fit_df, fit=True)
+    assert "category" in data_cleaner.label_encoders
+
+    # 2. Create a new dataframe with known and unknown categories
+    transform_df = pd.DataFrame({"category": ["A", "B", "C", "A", "D"]})
+
+    # 3. Transform the new dataframe
+    encoded_df = data_cleaner.encode_categorical_features(transform_df, fit=False)
+
+    # 4. Assert that known categories are encoded correctly and unknown ones are -1
+    # Assuming the fit was A->0, B->1
+    expected_values = [0, 1, -1, 0, -1]
+    assert list(encoded_df["category"]) == expected_values
+    assert encoded_df["category"].dtype == "int"
 
 
 def test_scale_numerical_features(data_cleaner, sample_dataframe):

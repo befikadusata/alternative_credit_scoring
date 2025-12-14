@@ -72,13 +72,15 @@ import os
 import random
 import time
 from datetime import datetime, timezone
-from threading import Lock
+from threading import Lock, Thread
+import json
 
 import pandas as pd
 from fastapi import HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from prometheus_fastapi_instrumentator import Instrumentator
 from pythonjsonlogger import jsonlogger
+from kafka import KafkaConsumer
 
 from .model_loader import load_model_from_registry
 from .models import (
@@ -87,6 +89,7 @@ from .models import (
     BatchPredictionResponse,
     ModelLoadRequest,
     ModelLoadResponse,
+    PredictionInput, # Added PredictionInput
     PredictionRequest,
     PredictionResponse,
 )
@@ -106,6 +109,201 @@ prediction_logger = logging.getLogger("prediction_logger")
 prediction_logger.addHandler(log_handler)
 prediction_logger.setLevel(logging.INFO)
 
+KAFKA_BOOTSTRAP_SERVERS = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "kafka:9092")
+PREDICTION_REQUESTS_TOPIC = os.getenv("PREDICTION_REQUESTS_TOPIC", "prediction_requests")
+
+# --- Champion-Challenger Model Management ---
+model_lock = Lock()
+champion_model = None
+challenger_model = None
+champion_cleaner = None
+challenger_cleaner = None
+champion_model_info = {}
+challenger_model_info = {}
+challenger_traffic_percentage = 0.0
+
+
+def _get_prediction(input_data: PredictionInput):
+    """Reusable function to get a prediction for a single input."""
+    if champion_model is None or champion_cleaner is None:
+        raise HTTPException(status_code=503, detail="Champion model not loaded")
+
+    use_challenger = (
+        challenger_model is not None
+        and challenger_cleaner is not None
+        and random.random() < (challenger_traffic_percentage / 100.0)
+    )
+
+    if use_challenger:
+        model = challenger_model
+        cleaner = challenger_cleaner
+        model_type = "challenger"
+        model_info = challenger_model_info
+    else:
+        model = champion_model
+        cleaner = champion_cleaner
+        model_type = "champion"
+        model_info = champion_model_info
+    
+    features_source = "request_payload"
+    
+    if input_data.loan_id:
+        cached_features = redis_client.get_features(input_data.loan_id)
+        if cached_features:
+            input_data = cached_features
+            features_source = "redis_cache"
+            logger.info(
+                f"Using features from Redis cache for loan_id: {input_data.loan_id}"
+            )
+        else:
+            logger.info(
+                f"Features for loan_id: {input_data.loan_id} not found in Redis. Using request payload."
+            )
+
+    start_time = time.time()
+
+    # Create a DataFrame from the input features
+    input_data_dict = input_data.model_dump(exclude_unset=True)
+    # Explicitly remove loan_id before cleaning and prediction
+    loan_id_val = input_data_dict.pop("loan_id", None)
+    input_df = pd.DataFrame([input_data_dict])
+
+    # Convert all object dtype columns (categorical) to numerical using one-hot encoding
+    for col in input_df.select_dtypes(include=["object"]).columns:
+        if col in input_df.columns:
+            dummies = pd.get_dummies(input_df[col], prefix=col)
+            input_df = pd.concat([input_df.drop(columns=[col]), dummies], axis=1)
+
+    # Ensure all columns are float types (for the dummy model, which expects numerical input)
+    scaled_df = input_df.astype(float)
+
+    # Align columns with the model's expected feature names
+    expected_features = model_info.get("feature_names", [])
+    if not expected_features:
+        logger.warning(
+            "Model feature names not found. Proceeding without feature alignment."
+        )
+    else:
+        scaled_df = scaled_df.reindex(columns=expected_features, fill_value=0)
+
+    prediction_proba = model.predict_proba(scaled_df)
+    prediction = model.predict(scaled_df)
+
+    prediction_time = time.time() - start_time
+    model_info["last_prediction_time"] = datetime.now(timezone.utc)
+
+    response = PredictionResponse(
+        prediction=int(prediction[0]),
+        probability_default=float(prediction_proba[0][1]),
+        probability_repayment=float(prediction_proba[0][0]),
+        risk_level=(
+            "high"
+            if prediction_proba[0][1] > 0.7
+            else "medium" if prediction_proba[0][1] > 0.3 else "low"
+        ),
+        prediction_time_seconds=prediction_time,
+        model_name=model_info["model_name"],
+        model_version=model_info["model_version"],
+        timestamp=datetime.now(timezone.utc),
+    )
+
+    prediction_logger.info(
+        "Prediction successful",
+        extra={
+            "model_type": model_type,
+            "features_source": features_source,
+            "prediction_details": response.model_dump(),
+            "input_features": input_data.model_dump(
+                exclude={"loan_id"}
+            ),  # Log features without loan_id
+        },
+    )
+
+    # --- Write-through cache ---
+    if input_data.loan_id:
+        redis_client.set_features(input_data.loan_id, input_data)
+
+    return response
+
+
+def consume_prediction_requests():
+    """Runs a Kafka consumer in a background thread."""
+    consumer = KafkaConsumer(
+        PREDICTION_REQUESTS_TOPIC,
+        bootstrap_servers=KAFKA_BOOTSTRAP_SERVERS,
+        value_deserializer=lambda v: json.loads(v.decode('utf-8')),
+        auto_offset_reset='earliest'
+    )
+    logger.info(f"Kafka consumer started on topic '{PREDICTION_REQUESTS_TOPIC}'")
+    for message in consumer:
+        try:
+            input_data = PredictionRequest(**message.value)
+            _get_prediction(input_data)
+        except Exception as e:
+            logger.error(f"Error processing message from Kafka: {e}")
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Lifespan context manager to handle startup and shutdown events."""
+    logger.info("Starting up Credit Scoring API with Champion-Challenger support...")
+    global challenger_traffic_percentage
+
+    challenger_traffic_percentage = float(
+        os.getenv("CHALLENGER_TRAFFIC_PERCENTAGE", 0.0)
+    )
+
+    with model_lock:
+        # Load Champion Model
+        try:
+            champ_model_name = os.getenv("CHAMPION_MODEL_NAME", "credit_scoring_model")
+            champ_model_version = os.getenv("CHAMPION_MODEL_VERSION", "champion")
+            _load_model(champ_model_name, champ_model_version, "champion")
+        except Exception as e:
+            logger.error(f"Failed to load champion model on startup: {str(e)}")
+
+        # Load Challenger Model
+        if challenger_traffic_percentage > 0:
+            try:
+                challenger_model_name = os.getenv("CHALLENGER_MODEL_NAME")
+                challenger_model_version = os.getenv("CHALLENGER_MODEL_VERSION")
+                if challenger_model_name and challenger_model_version:
+                    _load_model(
+                        challenger_model_name, challenger_model_version, "challenger"
+                    )
+                else:
+                    logger.warning(
+                        "Challenger traffic > 0 but CHALLENGER_MODEL_NAME or CHALLENGER_MODEL_VERSION not set."
+                    )
+            except Exception as e:
+                logger.error(f"Failed to load challenger model on startup: {str(e)}")
+
+    # Initialize Redis client on startup
+    if redis_client.client:
+        redis_client.client.ping()
+
+    # Start Kafka consumer in a background thread
+    if os.getenv("DISABLE_KAFKA_CONSUMER") != "True":
+        consumer_thread = Thread(target=consume_prediction_requests, daemon=True)
+        consumer_thread.start()
+    else:
+        logger.warning("Kafka consumer disabled via environment variable.")
+
+    yield  # This is where the application runs
+
+    # Shutdown code would go here if needed
+    logger.info("Shutting down Credit Scoring API...")
+
+
+app = FastAPI(
+    title="Credit Scoring API",
+    description="API for making credit scoring predictions with Champion-Challenger support",
+    version="1.1.0",
+    docs_url="/docs",
+    redoc_url="/redoc",
+    lifespan=lifespan,
+)
+
 
 # Add CORS middleware
 app.add_middleware(
@@ -118,16 +316,6 @@ app.add_middleware(
 
 # Instrument the app with Prometheus
 Instrumentator().instrument(app).expose(app)
-
-# --- Champion-Challenger Model Management ---
-model_lock = Lock()
-champion_model = None
-challenger_model = None
-champion_cleaner = None
-challenger_cleaner = None
-champion_model_info = {}
-challenger_model_info = {}
-challenger_traffic_percentage = 0.0
 
 
 def _load_model(model_name: str, model_version: str, model_type: str):
@@ -218,111 +406,10 @@ async def get_model_info():
 @app.post("/predict", response_model=PredictionResponse)
 async def predict_credit_risk(request: PredictionRequest):
     """Make a prediction, routing between champion and challenger."""
-    if champion_model is None or champion_cleaner is None:
-        raise HTTPException(status_code=503, detail="Champion model not loaded")
-
-    use_challenger = (
-        challenger_model is not None
-        and challenger_cleaner is not None
-        and random.random() < (challenger_traffic_percentage / 100.0)
-    )
-
-    if use_challenger:
-        model = challenger_model
-        cleaner = challenger_cleaner
-        model_type = "challenger"
-        model_info = challenger_model_info
-    else:
-        model = champion_model
-        cleaner = champion_cleaner
-        model_type = "champion"
-        model_info = champion_model_info
-
-    # --- Feature Store Lookup ---
-    features_source = "request_payload"
-    input_features = request.input
-
-    if input_features.loan_id:
-        cached_features = redis_client.get_features(input_features.loan_id)
-        if cached_features:
-            input_features = cached_features
-            features_source = "redis_cache"
-            logger.info(
-                f"Using features from Redis cache for loan_id: {input_features.loan_id}"
-            )
-        else:
-            logger.info(
-                f"Features for loan_id: {input_features.loan_id} not found in Redis. Using request payload."
-            )
-
     try:
-        start_time = time.time()
-
-        # Create a DataFrame from the input features
-        input_data_dict = input_features.model_dump(exclude_unset=True)
-        # Explicitly remove loan_id before cleaning and prediction
-        loan_id_val = input_data_dict.pop("loan_id", None)
-        input_df = pd.DataFrame([input_data_dict])
-
-        # Convert all object dtype columns (categorical) to numerical using one-hot encoding
-        for col in input_df.select_dtypes(include=["object"]).columns:
-            if col in input_df.columns:
-                dummies = pd.get_dummies(input_df[col], prefix=col)
-                input_df = pd.concat([input_df.drop(columns=[col]), dummies], axis=1)
-
-        # Ensure all columns are float types (for the dummy model, which expects numerical input)
-        scaled_df = input_df.astype(float)
-
-        # Align columns with the model's expected feature names
-        expected_features = model_info.get("feature_names", [])
-        if not expected_features:
-            logger.warning(
-                "Model feature names not found. Proceeding without feature alignment."
-            )
-        else:
-            scaled_df = scaled_df.reindex(columns=expected_features, fill_value=0)
-
-        prediction_proba = model.predict_proba(scaled_df)
-        prediction = model.predict(scaled_df)
-
-        prediction_time = time.time() - start_time
-        model_info["last_prediction_time"] = datetime.now(timezone.utc)
-
-        response = PredictionResponse(
-            prediction=int(prediction[0]),
-            probability_default=float(prediction_proba[0][1]),
-            probability_repayment=float(prediction_proba[0][0]),
-            risk_level=(
-                "high"
-                if prediction_proba[0][1] > 0.7
-                else "medium" if prediction_proba[0][1] > 0.3 else "low"
-            ),
-            prediction_time_seconds=prediction_time,
-            model_name=model_info["model_name"],
-            model_version=model_info["model_version"],
-            timestamp=datetime.now(timezone.utc),
-        )
-
-        prediction_logger.info(
-            "Prediction successful",
-            extra={
-                "model_type": model_type,
-                "features_source": features_source,
-                "prediction_details": response.model_dump(),
-                "input_features": input_features.model_dump(
-                    exclude={"loan_id"}
-                ),  # Log features without loan_id
-            },
-        )
-
-        # --- Write-through cache ---
-        if input_features.loan_id:
-            redis_client.set_features(input_features.loan_id, input_features)
-
-        return response
-
+        return _get_prediction(request.input)
     except Exception as e:
-        logger.error(f"Prediction with {model_type} model failed: {str(e)}")
+        logger.error(f"Prediction failed: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Prediction failed: {str(e)}")
 
 

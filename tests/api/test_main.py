@@ -191,8 +191,10 @@ def mock_models(dummy_model_path, data_cleaner):
             "src.api.main.challenger_cleaner", MagicMock()
         ),  # Mock challenger cleaner
         patch("src.api.main.champion_model_info", model_info),
+        patch("src.api.main.challenger_model_info", {"model_name": "challenger_model", "model_version": "challenger", "feature_names": feature_names}),
     ):
-        yield mock_champion_model  # Yield the champion model for specific assertions
+        yield mock_champion_model, mock_challenger_model
+
 
 
 @pytest.fixture(scope="function")
@@ -218,6 +220,7 @@ def test_health_check(client):
 def test_predict_endpoint_no_redis(client, mock_models, mock_redis):
     """Tests the /predict endpoint with no loan_id, so Redis is not used."""
     mock_redis.get_features.return_value = None
+    mock_champion_model, _ = mock_models  # Unpack the tuple
 
     # Sample valid input payload
     payload = {
@@ -257,14 +260,15 @@ def test_predict_endpoint_no_redis(client, mock_models, mock_redis):
 
     assert response.status_code == 200
     json_response = response.json()
-    # With a real model, we cannot assert specific fixed values, but we can assert the structure and type
     assert "prediction" in json_response
     assert "probability_default" in json_response
     assert "risk_level" in json_response
 
-    # Verify that redis was not called to get or set features since no loan_id was provided
+    # Verify that redis was not called
     mock_redis.get_features.assert_not_called()
     mock_redis.set_features.assert_not_called()
+    # Verify champion model was called
+    mock_champion_model.predict_proba.assert_called_once()
 
 
 def test_predict_endpoint_with_redis_miss(client, mock_models, mock_redis):
@@ -310,10 +314,7 @@ def test_predict_endpoint_with_redis_miss(client, mock_models, mock_redis):
 
     assert response.status_code == 200
     mock_redis.get_features.assert_called_once_with(loan_id)
-    # Verify that features are written to cache after a miss
     mock_redis.set_features.assert_called_once()
-
-    # Check the actual call arguments to set_features
     args, kwargs = mock_redis.set_features.call_args
     assert args[0] == loan_id
     assert isinstance(args[1], PredictionInput)
@@ -323,8 +324,8 @@ def test_predict_endpoint_with_redis_miss(client, mock_models, mock_redis):
 def test_predict_endpoint_with_redis_hit(client, mock_models, mock_redis):
     """Tests the /predict endpoint with a Redis cache hit."""
     loan_id = "test-loan-456"
+    mock_champion_model, _ = mock_models
 
-    # The features that are "cached" in Redis
     cached_features = PredictionInput(
         **{
             "loan_id": loan_id,
@@ -360,13 +361,10 @@ def test_predict_endpoint_with_redis_hit(client, mock_models, mock_redis):
     )
     mock_redis.get_features.return_value = cached_features
 
-    # The payload sent by the user might be different, but since loan_id matches,
-    # the cached features should be used.
     payload = {
         "input": {
             "loan_id": loan_id,
             "loan_amnt": 1000.0,
-            # ... other fields can be different or missing
             "term": "36 months",
             "int_rate": 10.0,
             "installment": 300.0,
@@ -402,16 +400,12 @@ def test_predict_endpoint_with_redis_hit(client, mock_models, mock_redis):
     assert response.status_code == 200
     mock_redis.get_features.assert_called_once_with(loan_id)
 
-    # Check that the model was called with the cached data, not the payload data
-    # The mock model's `predict_proba` is called with a DataFrame
-    call_args, _ = mock_models.predict_proba.call_args
+    call_args, _ = mock_champion_model.predict_proba.call_args
     input_df = call_args[0]
     assert isinstance(input_df, pd.DataFrame)
 
-    # Apply the same preprocessing transformations that the API does
     expected_input_df = pd.DataFrame([cached_features.model_dump(exclude={"loan_id"})])
 
-    # Apply same one-hot encoding as in src/api/main.py
     for col in expected_input_df.select_dtypes(include=["object"]).columns:
         if col in expected_input_df.columns:
             dummies = pd.get_dummies(expected_input_df[col], prefix=col)
@@ -419,11 +413,8 @@ def test_predict_endpoint_with_redis_hit(client, mock_models, mock_redis):
                 [expected_input_df.drop(columns=[col]), dummies], axis=1
             )
 
-    # Ensure all columns are float types
     expected_input_df = expected_input_df.astype(float)
 
-    # Align columns with the model's expected feature names
-    # Load the feature names to make sure we align properly
     feature_names_path = "tests/test_model_features.joblib"
     if os.path.exists(feature_names_path):
         model_feature_names = joblib.load(feature_names_path)
@@ -432,6 +423,70 @@ def test_predict_endpoint_with_redis_hit(client, mock_models, mock_redis):
         )
 
     pd.testing.assert_frame_equal(input_df, expected_input_df)
-
-    # Also check that the write-through cache is still active
     mock_redis.set_features.assert_called_once()
+
+
+def test_predict_endpoint_invalid_input(client, mock_models):
+    """Tests the /predict endpoint with a missing required field."""
+    payload = {
+        "input": {
+            "term": "36 months",
+            "int_rate": 10.0,
+        }
+    }
+
+    response = client.post("/predict", json=payload)
+
+    assert response.status_code == 422
+    json_response = response.json()
+    assert "detail" in json_response
+    assert any(
+        "loan_amnt" in error["loc"] and "Field required" in error["msg"]
+        for error in json_response["detail"]
+    )
+
+
+def test_predict_endpoint_challenger_model(client, mock_models, mock_redis):
+    """Tests that the challenger model is called when random() is low."""
+    mock_champion_model, mock_challenger_model = mock_models
+
+    with patch("src.api.main.challenger_traffic_percentage", 50.0):
+        with patch("src.api.main.random.random", return_value=0.0):
+            payload = {
+                "input": {
+                    "loan_amnt": 15000.0,
+                    "term": "60 months",
+                    "int_rate": 15.0,
+                    "installment": 400.0,
+                    "grade": "C",
+                    "sub_grade": "C3",
+                    "emp_length": 2.0,
+                    "home_ownership": "RENT",
+                    "annual_inc": 55000.0,
+                    "verification_status": "Source Verified",
+                    "purpose": "other",
+                    "dti": 25.0,
+                    "delinq_2yrs": 1,
+                    "inq_last_6mths": 0,
+                    "open_acc": 12,
+                    "pub_rec": 0,
+                    "revol_bal": 15000,
+                    "revol_util": 70.0,
+                    "total_acc": 30,
+                    "initial_list_status": "f",
+                    "total_pymnt": 2000.0,
+                    "total_pymnt_inv": 2000.0,
+                    "total_rec_prncp": 1500.0,
+                    "total_rec_int": 500.0,
+                    "total_rec_late_fee": 0.0,
+                    "recoveries": 0.0,
+                    "collection_recovery_fee": 0.0,
+                    "last_pymnt_amnt": 400.0,
+                }
+            }
+
+            response = client.post("/predict", json=payload)
+            assert response.status_code == 200
+
+            mock_challenger_model.predict_proba.assert_called_once()
+            mock_champion_model.predict_proba.assert_not_called()
