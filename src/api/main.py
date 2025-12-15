@@ -12,61 +12,6 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
-
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    """Lifespan context manager to handle startup and shutdown events."""
-    logger.info("Starting up Credit Scoring API with Champion-Challenger support...")
-    global challenger_traffic_percentage
-
-    challenger_traffic_percentage = float(
-        os.getenv("CHALLENGER_TRAFFIC_PERCENTAGE", 0.0)
-    )
-
-    with model_lock:
-        # Load Champion Model
-        try:
-            champ_model_name = os.getenv("CHAMPION_MODEL_NAME", "credit_scoring_model")
-            champ_model_version = os.getenv("CHAMPION_MODEL_VERSION", "champion")
-            _load_model(champ_model_name, champ_model_version, "champion")
-        except Exception as e:
-            logger.error(f"Failed to load champion model on startup: {str(e)}")
-
-        # Load Challenger Model
-        if challenger_traffic_percentage > 0:
-            try:
-                challenger_model_name = os.getenv("CHALLENGER_MODEL_NAME")
-                challenger_model_version = os.getenv("CHALLENGER_MODEL_VERSION")
-                if challenger_model_name and challenger_model_version:
-                    _load_model(
-                        challenger_model_name, challenger_model_version, "challenger"
-                    )
-                else:
-                    logger.warning(
-                        "Challenger traffic > 0 but CHALLENGER_MODEL_NAME or CHALLENGER_MODEL_VERSION not set."
-                    )
-            except Exception as e:
-                logger.error(f"Failed to load challenger model on startup: {str(e)}")
-
-    # Initialize Redis client on startup
-    if redis_client.client:
-        redis_client.client.ping()
-
-    yield  # This is where the application runs
-
-    # Shutdown code would go here if needed
-    logger.info("Shutting down Credit Scoring API...")
-
-
-app = FastAPI(
-    title="Credit Scoring API",
-    description="API for making credit scoring predictions with Champion-Challenger support",
-    version="1.1.0",
-    docs_url="/docs",
-    redoc_url="/redoc",
-    lifespan=lifespan,
-)
-
 import logging
 import os
 import random
