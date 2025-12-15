@@ -38,7 +38,10 @@ from .models import (
     PredictionRequest,
     PredictionResponse,
 )
-from .redis_client import redis_client  # Import the Redis client
+from .redis_client import get_redis_client  # Import the Redis client getter function
+
+# Create a Redis client instance using the getter function
+redis_client = get_redis_client()
 
 # Set up logging
 logger = logging.getLogger(__name__)
@@ -353,6 +356,9 @@ async def predict_credit_risk(request: PredictionRequest):
     """Make a prediction, routing between champion and challenger."""
     try:
         return _get_prediction(request.input)
+    except HTTPException:
+        # Re-raise HTTPException as is (e.g., 503 for model not loaded)
+        raise
     except Exception as e:
         logger.error(f"Prediction failed: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Prediction failed: {str(e)}")
@@ -489,6 +495,9 @@ async def predict_credit_risk_batch(request: BatchPredictionRequest):
 
         return batch_response
 
+    except HTTPException:
+        # Re-raise HTTPException as is (e.g., 503 for model not loaded)
+        raise
     except Exception as e:
         logger.error(f"Batch prediction with {model_type} model failed: {str(e)}")
         raise HTTPException(

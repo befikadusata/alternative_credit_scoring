@@ -23,6 +23,12 @@ class RedisClient:
                     cls._instance._initialize()
         return cls._instance
 
+    @classmethod
+    def reset_instance(cls):
+        """Reset the singleton instance - used for testing."""
+        with cls._lock:
+            cls._instance = None
+
     def _initialize(self):
         self.REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
         self.REDIS_PORT = int(os.getenv("REDIS_PORT", 6379))
@@ -97,5 +103,10 @@ class RedisClient:
             return False
 
 
-# Ensure the client is initialized on import
+def get_redis_client():
+    """Get the Redis client instance (singleton)."""
+    return RedisClient()
+
+# Ensure the client is initialized as a module-level instance (singleton)
+# This maintains backward compatibility with existing imports
 redis_client = RedisClient()
