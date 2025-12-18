@@ -52,3 +52,4 @@ target/
 Thumbs.db
 \n# Folder for local, non-versioned documentation\n.docs/
 docs_old/
+# Ignore local documentation folder and its contents\n.docs/**
