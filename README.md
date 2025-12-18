@@ -1,61 +1,46 @@
 # Alternative Credit Scoring Platform
 
-This project demonstrates a production-ready Machine Learning system designed for alternative credit scoring. It showcases comprehensive MLOps practices, including real-time prediction, model versioning, drift detection, and explainable AI.
+This project is a complete, production-ready Machine Learning platform that assesses creditworthiness using alternative data sources. It is designed to serve as a comprehensive template for building, deploying, and monitoring robust MLOps systems.
 
-## Project Overview
-
-The core purpose is to provide a robust, scalable, and observable platform for assessing creditworthiness using non-traditional data sources, thereby fostering financial inclusion for underserved populations.
-
-## Documentation
-
-All detailed project documentation can be found in the [`docs/`](./docs/index.md) directory.
-
-*   **[Repository Structure](./docs/repository-structure.md)**: Explains the layout of the project repository.
-*   **[API Specification](./docs/api/spec.md)**: Details the available API endpoints and their usage.
-*   **[MLOps Overview](./docs/mlops/index.md)**: Describes the MLOps principles and tools used.
-
-For a high-level plan of upcoming work, please refer to the [PROJECT_ROADMAP.md](./PROJECT_ROADMAP.md).
-
-## Getting Started
-
-Detailed instructions on how to set up the local development environment and run the project are provided in [GETTING_STARTED.md](./docs/GETTING_STARTED.md).
+---
 
 ## Key Features
 
-*   **Real-time Prediction:** Low-latency API for instant credit decisions, with streaming support via Kafka.
-*   **ML Pipeline Orchestration:** Automated training, evaluation, and deployment pipeline using Apache Airflow.
-*   **MLflow Integration:** Comprehensive experiment tracking, model registry, and lifecycle management.
-*   **Champion-Challenger Deployment:** Safe model deployments with A/B testing capabilities.
-*   **Drift Detection:** Automated monitoring for data and model drift using Evidently AI.
-*   **Explainable AI:** SHAP-based explanations for every prediction.
-*   **Observability:** Prometheus and Grafana for infrastructure and model monitoring.
+-   **Real-time Prediction API:** A low-latency FastAPI server for instant credit risk assessments.
+-   **End-to-End MLOps:** Full lifecycle management using MLflow for experiment tracking and model registry.
+-   **Champion-Challenger Deployments:** Safely test new models in production by routing a portion of live traffic.
+-   **Automated Model Retraining:** Orchestrated via Apache Airflow to keep models fresh.
+-   **Comprehensive Monitoring:** Includes system monitoring with Prometheus/Grafana and ML-specific drift detection with Evidently AI.
+-   **Declarative Infrastructure:** The entire stack is containerized with Docker and can be stood up with a single command.
 
-## Technology Stack
+---
 
-*   **ML Framework:** XGBoost, Scikit-learn
-*   **Orchestration:** Apache Airflow
-*   **Streaming:** Apache Kafka
-*   **MLOps:** MLflow, Evidently AI
-*   **API:** FastAPI, Uvicorn
-*   **Data Storage:** PostgreSQL (MLflow & Airflow metadata), MinIO (Artifacts), Redis (Feature Store)
-*   **Monitoring:** Prometheus, Grafana
-*   **Containerization:** Docker, Docker Compose
-*   **CI/CD:** GitHub Actions (planned)
+## Live Demo in 30 Seconds
 
-## Running the ML Pipeline
+To see the platform in action, follow the quick-start guide to launch all services and make a live prediction against the API.
 
-The entire ML pipeline can be executed using Apache Airflow.
+➡️ **[View the Demo Guide](./docs/demo-guide.md)**
 
-1.  **Start all services:**
-    ```bash
-    docker-compose up -d
-    ```
-2.  **Access the Airflow UI:**
-    Open your browser and navigate to `http://localhost:8080`.
-    - **Username:** `airflow`
-    - **Password:** `airflow`
+---
 
-3.  **Trigger the ML Pipeline DAG:**
-    - In the Airflow UI, find the `ml_pipeline_dag`.
-    - Unpause the DAG by clicking the toggle on the left.
-    - Manually trigger the DAG by clicking the "play" button on the right.
+## Project Documentation
+
+This repository contains extensive documentation covering the system architecture, technical decisions, API specifications, and model performance.
+
+-   **[Portfolio Pitch](./docs/portfolio-pitch.md):** A high-level overview for investors and hiring managers.
+-   **[System Architecture](./docs/architecture.md):** A deep dive into the components, data flows, and infrastructure.
+-   **[Technology Decisions](./docs/tech-decisions.md):** The rationale behind the chosen technology stack.
+-   **[API Specification](./docs/api.md):** Detailed documentation for all API endpoints.
+-   **[Model Evaluation](./docs/evaluation.md):** Performance metrics and fairness analysis for the credit model.
+
+---
+
+## Core Technology Stack
+
+-   **Backend & Serving:** FastAPI, Docker
+-   **ML & Data Science:** XGBoost, Scikit-learn, Pandas
+-   **MLOps & Orchestration:** MLflow, Apache Airflow, Evidently AI
+-   **Databases & Storage:** PostgreSQL, Redis, MinIO
+-   **Monitoring:** Prometheus, Grafana
+
+For a detailed breakdown, see the [Technology Decisions](./docs/tech-decisions.md) document.

@@ -59,7 +59,7 @@ services:
     image: redis:7-alpine
     container_name: credit-scoring-redis
     ports:
-      - "6379:6379"
+      - "6380:6379"
     volumes:
       - redis_data:/data
     healthcheck:
@@ -159,6 +159,8 @@ services:
         reservations:
           memory: 256M
           cpus: '0.25'
+    dns:
+      - 8.8.8.8
 
   # Airflow PostgreSQL database
   airflow-postgres:
@@ -236,6 +238,8 @@ services:
         reservations:
           memory: 512M
           cpus: '0.5'
+    dns:
+      - 8.8.8.8
 
   # Airflow scheduler
   airflow-scheduler:
@@ -277,6 +281,8 @@ services:
         reservations:
           memory: 512M
           cpus: '0.5'
+    dns:
+      - 8.8.8.8
 
   # Airflow worker
   airflow-worker:
@@ -312,6 +318,8 @@ services:
         reservations:
           memory: 512M
           cpus: '0.5'
+    dns:
+      - 8.8.8.8
 
   # Airflow triggerer
   airflow-triggerer:
@@ -348,6 +356,8 @@ services:
         reservations:
           memory: 256M
           cpus: '0.25'
+    dns:
+      - 8.8.8.8
 
   # Prometheus for metrics collection
   prometheus:

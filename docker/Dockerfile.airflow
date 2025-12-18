@@ -7,6 +7,7 @@ FROM apache/airflow:3.1.4-python3.13
 ENV AIRFLOW_HOME=/opt/airflow
 
 # Install system dependencies required for poetry and other packages
+USER root
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     curl \
@@ -46,7 +47,9 @@ COPY configs/ /app/configs/
 COPY .env.template /app/.env.template
 
 # Ensure DAGs directory is created and has correct permissions
-RUN mkdir -p /opt/airflow/dags && \
+RUN getent group airflow || groupadd --system airflow && \
+    getent passwd airflow || useradd --system -g airflow airflow && \
+    mkdir -p /opt/airflow/dags && \
     chown -R airflow:airflow /opt/airflow
 # Switch back to airflow user
 USER airflow
